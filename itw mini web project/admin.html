@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Admin Panel - ElectroPower</title>
+    <meta name="description" content="ElectroPower admin dashboard - manage products, orders and repair requests.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#f5f7fa',
+                        foreground: '#1a1f2e',
+                        card: '#ffffff',
+                        'card-foreground': '#1a1f2e',
+                        popover: '#ffffff',
+                        'popover-foreground': '#1a1f2e',
+                        primary: { DEFAULT: '#1e2d4a', foreground: '#f8f9fb' },
+                        secondary: { DEFAULT: '#e2a83a', foreground: '#1a1f2e' },
+                        muted: { DEFAULT: '#edf0f5', foreground: '#5a6377' },
+                        accent: { DEFAULT: '#e2a83a', foreground: '#1a1f2e' },
+                        destructive: { DEFAULT: '#d14343', foreground: '#f8f9fb' },
+                        border: '#dde1e8',
+                        input: '#e4e8ef',
+                        ring: '#1e2d4a',
+                        sidebar: { DEFAULT: '#141c2b', foreground: '#f8f9fb' },
+                    },
+                    borderRadius: {
+                        sm: 'calc(0.625rem - 4px)', md: 'calc(0.625rem - 2px)',
+                        lg: '0.625rem', xl: 'calc(0.625rem + 4px)', '2xl': '1rem',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'monospace'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.25s ease-out',
+                        'fade-in-up': 'fadeInUp 0.4s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --background: #f5f7fa; --foreground: #1a1f2e; --primary: #1e2d4a; --primary-foreground: #f8f9fb;
+            --secondary: #e2a83a; --secondary-foreground: #1a1f2e; --muted: #edf0f5; --muted-foreground: #5a6377;
+            --border: #dde1e8; --destructive: #d14343; --destructive-foreground: #f8f9fb; --radius: 0.625rem;
+        }
+        * { border-color: var(--border); }
+        body {
+            background-color: var(--background); color: var(--foreground);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; margin: 0; overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c1c9d6; border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: #8b95a8; }
+
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+            background: linear-gradient(90deg, #e2a83a, #f0c45a, #ff8c42);
+            border-radius: 0 2px 2px 0; transition: width 0.1s linear;
+            box-shadow: 0 0 14px rgba(226,168,58,0.5), 0 0 28px rgba(226,168,58,0.25);
+        }
+
+        #back-to-top { transition: all 0.35s ease; opacity: 0; transform: translateY(20px); pointer-events: none; }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+        .ripple {
+            position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4);
+            transform: scale(0); animation: ripple-anim 0.7s ease-out forwards; pointer-events: none;
+        }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
+        .magnetic-area { transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94); }
+
+        .toast-item {
+            box-shadow: 0 12px 36px rgba(0,0,0,0.18); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(226,168,58,0.35);
+        }
+
+        .reveal-on-scroll {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.65s ease-out, transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        .reveal-on-scroll.visible { opacity: 1; transform: translateY(0); }
+
+        .card-hover { transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(0,0,0,0.1); }
+
+        .glow-orb { border-radius: 50%; filter: blur(55px); opacity: 0.3; pointer-events: none; position: absolute; }
+        #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+        .badge { display: inline-flex; align-items: center; border-radius: 9999px; padding: 0.125rem 0.75rem; font-size: 0.7rem; font-weight: 600; text-transform: capitalize; letter-spacing: 0.025em; }
+        .badge-pending { background-color: #edf0f5; color: #5a6377; }
+        .badge-processing { background-color: #1e2d4a; color: #f8f9fb; }
+        .badge-in-progress { background-color: #1e2d4a; color: #f8f9fb; }
+        .badge-shipped { background-color: #dde1e8; color: #1a1f2e; border: 1px solid #bcc3d0; }
+        .badge-delivered { background-color: #dde1e8; color: #1a1f2e; border: 1px solid #bcc3d0; }
+        .badge-completed { background-color: #dde1e8; color: #1a1f2e; border: 1px solid #bcc3d0; }
+        .badge-instock { background-color: #1e2d4a; color: #f8f9fb; }
+        .badge-outofstock { background-color: #d14343; color: #f8f9fb; }
+    </style>
+</head>
+<body class="min-h-screen bg-background antialiased">
+    <div id="scroll-progress" style="width: 0%;"></div>
+    <button id="back-to-top" class="fixed bottom-7 right-7 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-2xl hover:bg-secondary/90 transition-all border-2 border-secondary-foreground/15" aria-label="Back to top" title="Back to top">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[110] flex flex-col gap-2 pointer-events-none"></div>
+    <div id="app"></div>
+
+    <script>
+        (function() {
+            // --- UI enhancements (same as before) ---
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                if (progressBar) progressBar.style.width = progress + '%';
+            });
+
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) backToTopBtn.classList.add('visible');
+                else backToTopBtn.classList.remove('visible');
+            });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            function showToast(message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                const bgColors = { success: 'bg-green-600', info: 'bg-foreground', warning: 'bg-secondary' };
+                toast.className = `toast-item pointer-events-auto ${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl text-sm font-medium max-w-xs border border-secondary/30`;
+                toast.textContent = message;
+                container.appendChild(toast);
+                setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 2500);
+            }
+
+            function createRipple(e, el) {
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                const rect = el.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+                ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+                el.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 700);
+            }
+
+            function applyMagnetic(el) {
+                if (el.dataset.magneticBound) return;
+                el.dataset.magneticBound = 'true';
+                el.addEventListener('mousemove', function(e) {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width/2;
+                    const y = e.clientY - rect.top - rect.height/2;
+                    el.style.transform = `translate(${x*0.2}px, ${y*0.2}px)`;
+                });
+                el.addEventListener('mouseleave', () => el.style.transform = 'translate(0,0)');
+            }
+
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+            function observeRevealElements() {
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        el.classList.add('visible');
+                        revealObserver.unobserve(el);
+                    }
+                });
+            }
+
+            function initCanvas(containerSelector) {
+                const canvas = document.querySelector(containerSelector + ' #hero-canvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                let particles = [], animId;
+                const heroSection = canvas.closest('section, div');
+
+                function resize() {
+                    canvas.width = heroSection.offsetWidth;
+                    canvas.height = heroSection.offsetHeight;
+                }
+
+                class Particle {
+                    constructor() { this.reset(); }
+                    reset() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.vx = (Math.random() - 0.5) * 0.8;
+                        this.vy = (Math.random() - 0.5) * 0.8;
+                        this.size = Math.random() * 2 + 0.5;
+                        this.alpha = Math.random() * 0.5 + 0.2;
+                        this.decay = Math.random() * 0.005 + 0.002;
+                    }
+                    update() {
+                        this.x += this.vx; this.y += this.vy;
+                        this.alpha -= this.decay;
+                        if (this.alpha <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                            this.reset(); this.alpha = Math.random() * 0.5 + 0.2;
+                        }
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+                        ctx.fillStyle = `rgba(226,168,58,${this.alpha})`;
+                        ctx.fill();
+                    }
+                }
+
+                function initParticles() {
+                    const count = Math.min(Math.floor((canvas.width * canvas.height) / 10000), 80);
+                    particles = [];
+                    for (let i = 0; i < count; i++) particles.push(new Particle());
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => { p.update(); p.draw(); });
+                    animId = requestAnimationFrame(animate);
+                }
+
+                resize(); initParticles(); animate();
+                window.addEventListener('resize', () => { resize(); initParticles(); });
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !animId) animate();
+                        else if (!entry.isIntersecting && animId) { cancelAnimationFrame(animId); animId = null; }
+                    });
+                }, { threshold: 0.05 });
+                observer.observe(heroSection);
+            }
+
+            // --- State with extended product data ---
+            const STORAGE_KEY = 'electropower_admin_data';
+            let state = {
+                isAdmin: false,
+                products: [],
+                orders: [],
+                repairRequests: [],
+            };
+
+            function loadState() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        state.products = parsed.products || [];
+                        state.orders = parsed.orders || [];
+                        state.repairRequests = parsed.repairRequests || [];
+                    } catch (e) {}
+                }
+                if (state.products.length === 0) {
+                    state.products = [
+                        { 
+                            id: 'p1', name: 'Smart LED TV 55"', category: 'TV', price: 699.99, rating: 4.8, description: '4K UHD Smart TV with HDR', 
+                            image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=80&h=80&q=80', inStock: true,
+                            specifications: { 'Screen Size': '55"', 'Resolution': '4K UHD', 'Refresh Rate': '120Hz', 'HDMI Ports': '4' },
+                            features: ['HDR10+', 'Smart TV with WebOS', 'Voice Control', 'Bluetooth 5.0'],
+                            reviews: [
+                                { user: 'John D.', rating: 5, comment: 'Amazing picture quality!', date: '2025-01-15' },
+                                { user: 'Sarah K.', rating: 4, comment: 'Great TV, easy setup.', date: '2025-02-10' }
+                            ]
+                        },
+                        { 
+                            id: 'p2', name: 'Bluetooth Soundbar', category: 'Speakers', price: 199.99, rating: 4.6, description: '360W Dolby Atmos Soundbar',
+                            image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=80&h=80&q=80', inStock: true,
+                            specifications: { 'Power': '360W', 'Channels': '3.1.2', 'Connectivity': 'Bluetooth, HDMI, Optical' },
+                            features: ['Dolby Atmos', 'Wireless Subwoofer', 'Built-in Chromecast'],
+                            reviews: [{ user: 'Mike R.', rating: 5, comment: 'Best soundbar under $200!', date: '2025-01-20' }]
+                        },
+                        { id: 'p3', name: 'Smart LED Bulb 4-Pack', category: 'LED Lights', price: 39.99, rating: 4.9, description: 'WiFi enabled RGB bulbs',
+                          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80', inStock: true,
+                          specifications: { 'Wattage': '9W', 'Lumens': '800lm', 'Color': 'RGB+White' },
+                          features: ['App Controlled', 'Works with Alexa', 'Energy Efficient'],
+                          reviews: [{ user: 'Emily W.', rating: 5, comment: 'Love the color options!', date: '2025-01-25' }] },
+                        { id: 'p4', name: 'Ceiling Fan Deluxe', category: 'Fans', price: 149.99, rating: 4.7, description: 'Quiet 5-speed remote',
+                          image: 'https://images.unsplash.com/photo-1585155967849-91c736589c91?auto=format&fit=crop&w=80&h=80&q=80', inStock: false,
+                          specifications: { 'Blade Span': '52"', 'Speeds': '5', 'Finish': 'Matte Black' },
+                          features: ['Silent Operation', 'Remote Control', 'Summer/Winter Mode'],
+                          reviews: [] },
+                    ];
+                }
+                if (state.orders.length === 0) {
+                    state.orders = [
+                        { id: 'ord-001', customer: { fullName: 'Alice Johnson', email: 'alice@example.com' }, items: [{ productId: 'p1', quantity: 1 }], total: 699.99, status: 'processing', createdAt: '2026-05-01T10:30:00Z' },
+                        { id: 'ord-002', customer: { fullName: 'Bob Williams', email: 'bob@example.com' }, items: [{ productId: 'p2', quantity: 2 }], total: 399.98, status: 'shipped', createdAt: '2026-05-02T14:15:00Z' },
+                    ];
+                }
+                if (state.repairRequests.length === 0) {
+                    state.repairRequests = [
+                        { id: 'rep-101', name: 'Carol Davis', phone: '555-0101', deviceName: 'Samsung 55" TV', status: 'in-progress', createdAt: '2026-05-03T09:20:00Z' },
+                        { id: 'rep-102', name: 'Dan Martinez', phone: '555-0102', deviceName: 'JBL Speaker', status: 'pending', createdAt: '2026-05-04T11:45:00Z' },
+                    ];
+                }
+                saveState();
+            }
+
+            function saveState() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    products: state.products, orders: state.orders, repairRequests: state.repairRequests,
+                }));
+            }
+
+            function adminLogin(password) {
+                if (password === 'admin123') {
+                    state.isAdmin = true;
+                    renderApp();
+                    showToast('✅ Login successful!', 'success');
+                    return true;
+                }
+                return false;
+            }
+
+            function adminLogout() {
+                state.isAdmin = false;
+                renderApp();
+                showToast('👋 Logged out', 'info');
+            }
+
+            function addProduct(productData) {
+                const newProduct = {
+                    id: 'p' + Date.now() + Math.random().toString(36).substr(2, 4),
+                    ...productData,
+                    rating: productData.rating || 4.0,
+                    image: productData.image || 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=80&h=80&q=80',
+                    inStock: productData.inStock !== undefined ? productData.inStock : true,
+                    specifications: productData.specifications || {},
+                    features: productData.features || [],
+                    reviews: productData.reviews || [],
+                };
+                state.products.push(newProduct);
+                saveState();
+                renderApp();
+                showToast('✅ Product added successfully!', 'success');
+            }
+
+            function updateProduct(id, updatedData) {
+                const index = state.products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    state.products[index] = { ...state.products[index], ...updatedData };
+                    saveState();
+                    renderApp();
+                    showToast('✅ Product updated!', 'success');
+                }
+            }
+
+            function deleteProduct(id) {
+                const product = state.products.find(p => p.id === id);
+                state.products = state.products.filter(p => p.id !== id);
+                saveState();
+                renderApp();
+                if (product) showToast(`🗑️ Deleted "${product.name}"`, 'info');
+            }
+
+            function addReview(productId, review) {
+                const product = state.products.find(p => p.id === productId);
+                if (product) {
+                    product.reviews = product.reviews || [];
+                    product.reviews.unshift(review);
+                    // recalc average rating
+                    const total = product.reviews.reduce((sum, r) => sum + r.rating, 0);
+                    product.rating = total / product.reviews.length;
+                    saveState();
+                    renderApp();
+                    showToast('⭐ Review added!', 'success');
+                }
+            }
+
+            function getStatusBadgeClass(status) {
+                const map = { 'pending': 'badge-pending', 'processing': 'badge-processing', 'in-progress': 'badge-in-progress', 'shipped': 'badge-shipped', 'delivered': 'badge-delivered', 'completed': 'badge-completed' };
+                return map[status] || 'badge-pending';
+            }
+
+            function formatDate(dateStr) {
+                return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+
+            // --- Render functions (tabs stay same except products tab now shows extra buttons for details) ---
+            const app = document.getElementById('app');
+
+            function renderApp() {
+                if (!state.isAdmin) renderLogin();
+                else renderDashboard();
+            }
+
+            function renderLogin() {
+                app.innerHTML = `
+                <div class="flex min-h-screen items-center justify-center bg-background px-4 relative overflow-hidden">
+                    <canvas id="hero-canvas"></canvas>
+                    <div class="w-full max-w-md bg-card rounded-xl shadow-xl border border-border p-8 fade-in relative z-10">
+                        <div class="text-center mb-6">
+                            <div class="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-primary mb-4">
+                                <svg class="h-8 w-8 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            </div>
+                            <h2 class="text-2xl font-bold text-foreground">Admin Login</h2>
+                            <p class="text-sm text-muted-foreground mt-2">Enter password to manage the store</p>
+                        </div>
+                        <form id="login-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-1" for="password">Password</label>
+                                <div class="relative">
+                                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                                    <input type="password" id="password" class="w-full rounded-lg border border-input bg-background px-10 py-2.5 text-sm" placeholder="Enter admin password" required autocomplete="off">
+                                </div>
+                                <p id="login-error" class="text-sm text-destructive mt-1 hidden"></p>
+                            </div>
+                            <button type="submit" id="login-btn" class="magnetic-area w-full inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition shadow-md relative overflow-hidden">
+                                <span class="relative z-10">Login</span>
+                            </button>
+                            <p class="text-center text-xs text-muted-foreground">Demo password: <code class="bg-muted px-1.5 py-0.5 rounded text-foreground font-mono">admin123</code></p>
+                        </form>
+                    </div>
+                </div>`;
+
+                document.getElementById('login-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const password = document.getElementById('password').value;
+                    const errorEl = document.getElementById('login-error');
+                    if (!adminLogin(password)) {
+                        errorEl.textContent = 'Invalid password. Try: admin123';
+                        errorEl.classList.remove('hidden');
+                    } else {
+                        errorEl.classList.add('hidden');
+                    }
+                });
+
+                const loginBtn = document.getElementById('login-btn');
+                if (loginBtn) {
+                    applyMagnetic(loginBtn);
+                    loginBtn.addEventListener('click', function(e) { createRipple(e, loginBtn); });
+                }
+                setTimeout(() => initCanvas('body'), 100);
+            }
+
+            function renderDashboard() {
+                const totalRevenue = state.orders.reduce((sum, o) => sum + (o.total || 0), 0).toFixed(2);
+
+                app.innerHTML = `
+                <div class="min-h-screen bg-background">
+                    <header class="relative border-b bg-primary py-4 shadow-sm overflow-hidden" id="dashboard-header">
+                        <canvas id="hero-canvas"></canvas>
+                        <div class="container mx-auto flex items-center justify-between px-4 max-w-7xl relative z-10">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
+                                    <svg class="h-6 w-6 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                </div>
+                                <div>
+                                    <h1 class="text-lg font-bold text-primary-foreground">Admin Dashboard</h1>
+                                    <p class="text-sm text-primary-foreground/70">Manage your electrical shop</p>
+                                </div>
+                            </div>
+                            <button id="logout-btn" class="magnetic-area inline-flex items-center gap-2 rounded-lg border border-primary-foreground/30 bg-transparent px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-foreground/10 transition">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                Logout
+                            </button>
+                        </div>
+                    </header>
+
+                    <div class="container mx-auto px-4 max-w-7xl py-8">
+                        <!-- Stats Cards (unchanged) -->
+                        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                            <div class="bg-card rounded-xl border border-border p-6 flex items-center gap-4 shadow-sm card-hover reveal-on-scroll">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10"><svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+                                <div><p class="text-sm text-muted-foreground">Total Products</p><p class="text-2xl font-bold text-foreground">${state.products.length}</p></div>
+                            </div>
+                            <div class="bg-card rounded-xl border border-border p-6 flex items-center gap-4 shadow-sm card-hover reveal-on-scroll"><div class="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/20"><svg class="h-6 w-6 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg></div><div><p class="text-sm text-muted-foreground">Total Orders</p><p class="text-2xl font-bold text-foreground">${state.orders.length}</p></div></div>
+                            <div class="bg-card rounded-xl border border-border p-6 flex items-center gap-4 shadow-sm card-hover reveal-on-scroll"><div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10"><svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div><div><p class="text-sm text-muted-foreground">Repair Requests</p><p class="text-2xl font-bold text-foreground">${state.repairRequests.length}</p></div></div>
+                            <div class="bg-card rounded-xl border border-border p-6 flex items-center gap-4 shadow-sm card-hover reveal-on-scroll"><div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100"><svg class="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><p class="text-sm text-muted-foreground">Revenue</p><p class="text-2xl font-bold text-foreground">$${totalRevenue}</p></div></div>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="mb-6 border-b border-border">
+                            <div class="flex gap-1 -mb-px overflow-x-auto" id="tab-list">
+                                <button class="tab-btn magnetic-area active px-4 py-3 text-sm font-semibold border-b-2 border-primary text-primary bg-transparent transition relative" data-tab="products">Products</button>
+                                <button class="tab-btn magnetic-area px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent transition" data-tab="orders">Orders</button>
+                                <button class="tab-btn magnetic-area px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent transition" data-tab="repairs">Repairs</button>
+                            </div>
+                        </div>
+
+                        <div id="tab-content" class="mt-4">${renderProductsTab()}</div>
+                    </div>
+                </div>`;
+
+                document.getElementById('logout-btn').addEventListener('click', adminLogout);
+                const tabBtns = document.querySelectorAll('.tab-btn');
+                tabBtns.forEach(btn => {
+                    applyMagnetic(btn);
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.tab-btn').forEach(b => {
+                            b.classList.remove('active', 'border-primary', 'text-primary', 'font-semibold');
+                            b.classList.add('text-muted-foreground', 'font-medium', 'border-transparent');
+                        });
+                        this.classList.add('active', 'border-primary', 'text-primary', 'font-semibold');
+                        this.classList.remove('text-muted-foreground', 'font-medium', 'border-transparent');
+                        const tab = this.dataset.tab;
+                        document.getElementById('tab-content').innerHTML = renderTabContent(tab);
+                        attachTabEvents(tab);
+                        observeRevealElements();
+                    });
+                });
+
+                attachTabEvents('products');
+                observeRevealElements();
+                setTimeout(() => initCanvas('#dashboard-header'), 100);
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) applyMagnetic(logoutBtn);
+            }
+
+            function renderTabContent(tab) {
+                switch(tab) {
+                    case 'products': return renderProductsTab();
+                    case 'orders': return renderOrdersTab();
+                    case 'repairs': return renderRepairsTab();
+                    default: return '';
+                }
+            }
+
+            function renderProductsTab() {
+                return `
+                <div class="bg-card rounded-xl border border-border shadow-sm reveal-on-scroll">
+                    <div class="p-6 flex flex-wrap items-center justify-between gap-4 border-b border-border">
+                        <div><h3 class="text-lg font-semibold text-foreground">Products</h3><p class="text-sm text-muted-foreground">Manage your product inventory and details</p></div>
+                        <button id="add-product-btn" class="magnetic-area inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition shadow-md relative overflow-hidden">
+                            <span class="relative z-10 flex items-center gap-2"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Product</span>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto table-wrapper">
+                        <table class="w-full text-sm">
+                            <thead class="bg-muted/50 text-left">
+                                <tr><th class="px-6 py-3 font-semibold">Product</th><th class="px-6 py-3 font-semibold">Category</th><th class="px-6 py-3 font-semibold">Price</th><th class="px-6 py-3 font-semibold">Stock</th><th class="px-6 py-3 font-semibold">Details</th><th class="px-6 py-3 font-semibold text-right">Actions</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-border">
+                                ${state.products.map(p => `
+                                <tr class="hover:bg-muted/20 transition">
+                                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="h-10 w-10 rounded-lg bg-muted overflow-hidden flex-shrink-0"><img src="${p.image}" alt="${p.name}" class="h-full w-full object-cover" onerror="this.src='https://placehold.co/40x40/1e2d4a/white?text=${p.name.charAt(0)}'"></div><span class="font-medium">${p.name}</span></div></td>
+                                    <td class="px-6 py-4 text-muted-foreground">${p.category}</td>
+                                    <td class="px-6 py-4 font-medium">$${p.price.toFixed(2)}</td>
+                                    <td class="px-6 py-4"><span class="badge ${p.inStock ? 'badge-instock' : 'badge-outofstock'}">${p.inStock ? 'In Stock' : 'Out of Stock'}</span></td>
+                                    <td class="px-6 py-4"><button class="view-details-btn magnetic-area inline-flex items-center gap-1 text-primary hover:text-secondary transition" data-id="${p.id}"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View</button></td>
+                                    <td class="px-6 py-4 text-right"><div class="flex justify-end gap-1">
+                                        <button class="edit-product-btn magnetic-area h-9 w-9 inline-flex items-center justify-center rounded-lg hover:bg-muted text-foreground transition" data-id="${p.id}" title="Edit"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                                        <button class="delete-product-btn magnetic-area h-9 w-9 inline-flex items-center justify-center rounded-lg hover:bg-destructive/10 text-destructive transition" data-id="${p.id}" title="Delete"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                                    </div></td>
+                                </tr>`).join('')}
+                                ${state.products.length === 0 ? `<tr><td colspan="6" class="px-6 py-12 text-center text-muted-foreground">No products yet.</td></tr>` : ''}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+
+            function renderOrdersTab() { /* same as original */ return `<div class="bg-card rounded-xl border border-border shadow-sm reveal-on-scroll"><div class="p-6 border-b border-border"><h3 class="text-lg font-semibold">Orders</h3><p class="text-sm text-muted-foreground">View and manage customer orders</p></div><div class="overflow-x-auto table-wrapper"><table class="w-full text-sm"><thead class="bg-muted/50 text-left"><tr><th class="px-6 py-3 font-semibold">Order ID</th><th class="px-6 py-3 font-semibold">Customer</th><th class="px-6 py-3 font-semibold">Items</th><th class="px-6 py-3 font-semibold">Total</th><th class="px-6 py-3 font-semibold">Status</th><th class="px-6 py-3 font-semibold">Date</th></tr></thead><tbody class="divide-y divide-border">${state.orders.map(o => `<tr class="hover:bg-muted/20 transition"><td class="px-6 py-4 font-mono text-xs">${o.id}</td><td class="px-6 py-4"><div><p class="font-medium">${o.customer.fullName}</p><p class="text-xs text-muted-foreground">${o.customer.email}</p></div></td><td class="px-6 py-4">${o.items.length} items</td><td class="px-6 py-4 font-medium">$${o.total.toFixed(2)}</td><td class="px-6 py-4"><span class="badge ${getStatusBadgeClass(o.status)}">${o.status}</span></td><td class="px-6 py-4 text-muted-foreground">${formatDate(o.createdAt)}</td></tr>`).join('')}${state.orders.length === 0 ? `<tr><td colspan="6" class="px-6 py-12 text-center text-muted-foreground">No orders yet.</td></tr>` : ''}</tbody></table></div></div>`; }
+            function renderRepairsTab() { /* same as original */ return `<div class="bg-card rounded-xl border border-border shadow-sm reveal-on-scroll"><div class="p-6 border-b border-border"><h3 class="text-lg font-semibold">Repair Requests</h3><p class="text-sm text-muted-foreground">View and manage repair service requests</p></div><div class="overflow-x-auto table-wrapper"><table class="w-full text-sm"><thead class="bg-muted/50 text-left"><tr><th class="px-6 py-3 font-semibold">Request ID</th><th class="px-6 py-3 font-semibold">Customer</th><th class="px-6 py-3 font-semibold">Device</th><th class="px-6 py-3 font-semibold">Status</th><th class="px-6 py-3 font-semibold">Date</th></tr></thead><tbody class="divide-y divide-border">${state.repairRequests.map(r => `<tr class="hover:bg-muted/20 transition"><td class="px-6 py-4 font-mono text-xs">${r.id}</td><td class="px-6 py-4"><div><p class="font-medium">${r.name}</p><p class="text-xs text-muted-foreground">${r.phone}</p></div></td><td class="px-6 py-4">${r.deviceName}</td><td class="px-6 py-4"><span class="badge ${getStatusBadgeClass(r.status)}">${r.status}</span></td><td class="px-6 py-4 text-muted-foreground">${formatDate(r.createdAt)}</td></tr>`).join('')}${state.repairRequests.length === 0 ? `<tr><td colspan="5" class="px-6 py-12 text-center text-muted-foreground">No repair requests yet.</td></tr>` : ''}</tbody></table></div></div>`; }
+
+            // --- Dialogs with full product details (specs, features, reviews) ---
+            function openAddProductDialog() {
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 z-50 flex items-center justify-center dialog-overlay fade-in';
+                overlay.innerHTML = `
+                <div class="bg-card rounded-xl shadow-2xl w-full max-w-2xl mx-4 p-6 fade-in border border-border max-h-[90vh] overflow-y-auto">
+                    <h3 class="text-lg font-semibold mb-4">Add New Product</h3>
+                    <form id="add-product-form" class="space-y-4">
+                        <div><label class="block text-sm font-medium mb-1">Product Name</label><input type="text" id="pname" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required></div>
+                        <div class="grid grid-cols-2 gap-3"><div><label class="block text-sm font-medium mb-1">Price ($)</label><input type="number" id="pprice" step="0.01" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required></div><div><label class="block text-sm font-medium mb-1">Category</label><select id="pcategory" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"><option value="TV">TV</option><option value="LED Lights">LED Lights</option><option value="Speakers">Speakers</option><option value="Fans">Fans</option><option value="Accessories">Accessories</option></select></div></div>
+                        <div><label class="block text-sm font-medium mb-1">Description</label><textarea id="pdesc" rows="2" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"></textarea></div>
+                        <div><label class="block text-sm font-medium mb-1">Image URL</label><input type="url" id="pimage" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="https://..."></div>
+                        <div><label class="block text-sm font-medium mb-1">Specifications (JSON format, e.g. {"Screen Size":"55"","Resolution":"4K"})</label><textarea id="pspecs" rows="3" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-mono"></textarea></div>
+                        <div><label class="block text-sm font-medium mb-1">Features (comma separated)</label><input type="text" id="pfeatures" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="HDR, Voice Control, WiFi"></div>
+                        <div class="flex items-center gap-2"><input type="checkbox" id="pinStock" checked class="h-4 w-4 rounded border-input text-primary"><label for="pinStock" class="text-sm">In Stock</label></div>
+                        <div class="flex justify-end gap-3 mt-4"><button type="button" id="cancel-add" class="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted">Cancel</button><button type="submit" class="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90">Add Product</button></div>
+                    </form>
+                </div>`;
+                document.body.appendChild(overlay);
+
+                overlay.querySelector('#cancel-add').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+                overlay.querySelector('#add-product-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('pname').value.trim();
+                    const price = parseFloat(document.getElementById('pprice').value);
+                    const category = document.getElementById('pcategory').value;
+                    const description = document.getElementById('pdesc').value.trim();
+                    const image = document.getElementById('pimage').value.trim();
+                    const inStock = document.getElementById('pinStock').checked;
+                    let specifications = {};
+                    try {
+                        const specText = document.getElementById('pspecs').value.trim();
+                        if (specText) specifications = JSON.parse(specText);
+                    } catch(e) { showToast('Invalid JSON for specifications', 'warning'); return; }
+                    const featuresRaw = document.getElementById('pfeatures').value.trim();
+                    const features = featuresRaw ? featuresRaw.split(',').map(f => f.trim()) : [];
+                    if (name && !isNaN(price)) {
+                        addProduct({ name, price, category, description, image, inStock, specifications, features, reviews: [] });
+                        overlay.remove();
+                    }
+                });
+            }
+
+            function openEditProductDialog(product) {
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 z-50 flex items-center justify-center dialog-overlay fade-in';
+                overlay.innerHTML = `
+                <div class="bg-card rounded-xl shadow-2xl w-full max-w-2xl mx-4 p-6 fade-in border border-border max-h-[90vh] overflow-y-auto">
+                    <h3 class="text-lg font-semibold mb-4">Edit Product</h3>
+                    <form id="edit-product-form" class="space-y-4">
+                        <div><label class="block text-sm font-medium mb-1">Product Name</label><input type="text" id="epname" value="${product.name}" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required></div>
+                        <div class="grid grid-cols-2 gap-3"><div><label class="block text-sm font-medium mb-1">Price ($)</label><input type="number" id="eprice" step="0.01" value="${product.price}" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required></div><div><label class="block text-sm font-medium mb-1">Category</label><select id="ecategory" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">${['TV','LED Lights','Speakers','Fans','Accessories'].map(cat => `<option value="${cat}" ${product.category === cat ? 'selected' : ''}>${cat}</option>`).join('')}</select></div></div>
+                        <div><label class="block text-sm font-medium mb-1">Description</label><textarea id="edesc" rows="2" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">${product.description || ''}</textarea></div>
+                        <div><label class="block text-sm font-medium mb-1">Image URL</label><input type="url" id="eimage" value="${product.image || ''}" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" placeholder="https://..."></div>
+                        <div><label class="block text-sm font-medium mb-1">Specifications (JSON format)</label><textarea id="especs" rows="3" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-mono">${JSON.stringify(product.specifications || {}, null, 2)}</textarea></div>
+                        <div><label class="block text-sm font-medium mb-1">Features (comma separated)</label><input type="text" id="efeatures" value="${(product.features || []).join(', ')}" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"></div>
+                        <div class="flex items-center gap-2"><input type="checkbox" id="einStock" ${product.inStock ? 'checked' : ''} class="h-4 w-4 rounded border-input text-primary"><label for="einStock" class="text-sm">In Stock</label></div>
+                        <div class="flex justify-end gap-3 mt-4"><button type="button" id="cancel-edit" class="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted">Cancel</button><button type="submit" class="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90">Save Changes</button></div>
+                    </form>
+                </div>`;
+                document.body.appendChild(overlay);
+
+                overlay.querySelector('#cancel-edit').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+                overlay.querySelector('#edit-product-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('epname').value.trim();
+                    const price = parseFloat(document.getElementById('eprice').value);
+                    const category = document.getElementById('ecategory').value;
+                    const description = document.getElementById('edesc').value.trim();
+                    const image = document.getElementById('eimage').value.trim();
+                    const inStock = document.getElementById('einStock').checked;
+                    let specifications = {};
+                    try {
+                        const specText = document.getElementById('especs').value.trim();
+                        if (specText) specifications = JSON.parse(specText);
+                    } catch(e) { showToast('Invalid JSON for specifications', 'warning'); return; }
+                    const featuresRaw = document.getElementById('efeatures').value.trim();
+                    const features = featuresRaw ? featuresRaw.split(',').map(f => f.trim()) : [];
+                    if (name && !isNaN(price)) {
+                        updateProduct(product.id, { name, price, category, description, image, inStock, specifications, features });
+                        overlay.remove();
+                    }
+                });
+            }
+
+            function openViewDetailsDialog(product) {
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 z-50 flex items-center justify-center dialog-overlay fade-in';
+                const specsHtml = product.specifications ? Object.entries(product.specifications).map(([k,v]) => `<div class="flex justify-between py-1 border-b border-border/50"><span class="font-medium">${k}</span><span class="text-muted-foreground">${v}</span></div>`).join('') : '<p class="text-muted-foreground">No specifications</p>';
+                const featuresHtml = (product.features || []).map(f => `<li class="flex items-start gap-2"><svg class="h-4 w-4 text-secondary mt-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>${f}</li>`).join('');
+                const reviewsHtml = (product.reviews || []).map(r => `<div class="border-b border-border pb-3 mb-3"><div class="flex items-center gap-2"><div class="flex">${Array.from({length:5},(_,i)=>`<svg class="h-4 w-4 ${i<r.rating?'star-filled':'star-empty'}" viewBox="0 0 24 24" fill="${i<r.rating?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`)}</div><span class="text-sm font-medium">${r.user}</span><span class="text-xs text-muted-foreground">${new Date(r.date).toLocaleDateString()}</span></div><p class="text-sm text-muted-foreground mt-1">${r.comment}</p></div>`).join('') || '<p class="text-muted-foreground">No reviews yet.</p>';
+                overlay.innerHTML = `
+                <div class="bg-card rounded-xl shadow-2xl w-full max-w-3xl mx-4 p-6 fade-in border border-border max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold text-foreground">Product Details</h3><button id="close-details" class="h-9 w-9 rounded-full hover:bg-muted">✕</button></div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div><img src="${product.image}" alt="${product.name}" class="w-full rounded-lg object-cover" onerror="this.src='https://placehold.co/400x300/1e2d4a/white?text=${product.name.charAt(0)}'"></div>
+                        <div><p class="text-xs text-muted-foreground uppercase">${product.category}</p><h2 class="text-2xl font-bold mt-1">${product.name}</h2><p class="text-muted-foreground mt-2">${product.description}</p><div class="mt-3"><span class="text-3xl font-bold">$${product.price.toFixed(2)}</span><span class="ml-3 badge ${product.inStock ? 'badge-instock' : 'badge-outofstock'}">${product.inStock ? 'In Stock' : 'Out of Stock'}</span></div><div class="mt-3 flex items-center gap-1">${Array.from({length:5},(_,i)=>`<svg class="h-5 w-5 ${i<Math.floor(product.rating)?'star-filled':'star-empty'}" viewBox="0 0 24 24" fill="${i<Math.floor(product.rating)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`)}<span class="text-sm ml-1">(${product.rating})</span></div></div>
+                    </div>
+                    <div class="mt-6"><h4 class="font-semibold mb-2">📋 Specifications</h4><div class="bg-muted/30 rounded-lg p-3">${specsHtml}</div></div>
+                    <div class="mt-4"><h4 class="font-semibold mb-2">✨ Key Features</h4><ul class="list-none space-y-1">${featuresHtml || '<li class="text-muted-foreground">No features listed</li>'}</ul></div>
+                    <div class="mt-4"><h4 class="font-semibold mb-2">⭐ Customer Reviews</h4><div class="max-h-60 overflow-y-auto pr-2">${reviewsHtml}</div><button id="add-review-btn" class="mt-3 inline-flex items-center gap-1 text-sm text-secondary hover:underline"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Review</button></div>
+                </div>`;
+                document.body.appendChild(overlay);
+                overlay.querySelector('#close-details').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+                const addReviewBtn = overlay.querySelector('#add-review-btn');
+                if (addReviewBtn) {
+                    addReviewBtn.addEventListener('click', () => {
+                        overlay.remove();
+                        openAddReviewDialog(product.id);
+                    });
+                }
+            }
+
+            function openAddReviewDialog(productId) {
+                const product = state.products.find(p => p.id === productId);
+                if (!product) return;
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 z-50 flex items-center justify-center dialog-overlay fade-in';
+                overlay.innerHTML = `
+                <div class="bg-card rounded-xl shadow-2xl w-full max-w-md mx-4 p-6 fade-in border border-border">
+                    <h3 class="text-lg font-semibold mb-4">Add Review for ${product.name}</h3>
+                    <form id="review-form" class="space-y-4">
+                        <div><label class="block text-sm font-medium mb-1">Your Name</label><input type="text" id="reviewer-name" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required></div>
+                        <div><label class="block text-sm font-medium mb-1">Rating (1-5)</label><select id="review-rating" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"><option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option></select></div>
+                        <div><label class="block text-sm font-medium mb-1">Comment</label><textarea id="review-comment" rows="3" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" required></textarea></div>
+                        <div class="flex justify-end gap-3 mt-4"><button type="button" id="cancel-review" class="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted">Cancel</button><button type="submit" class="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/90">Submit Review</button></div>
+                    </form>
+                </div>`;
+                document.body.appendChild(overlay);
+                overlay.querySelector('#cancel-review').addEventListener('click', () => overlay.remove());
+                overlay.querySelector('#review-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const user = document.getElementById('reviewer-name').value.trim();
+                    const rating = parseInt(document.getElementById('review-rating').value);
+                    const comment = document.getElementById('review-comment').value.trim();
+                    if (user && comment) {
+                        addReview(productId, { user, rating, comment, date: new Date().toISOString().split('T')[0] });
+                        overlay.remove();
+                    } else {
+                        showToast('Please fill all fields', 'warning');
+                    }
+                });
+            }
+
+            function attachTabEvents(tab) {
+                if (tab === 'products') {
+                    const addBtn = document.getElementById('add-product-btn');
+                    if (addBtn) {
+                        applyMagnetic(addBtn);
+                        addBtn.addEventListener('click', function(e) { createRipple(e, addBtn); openAddProductDialog(); });
+                    }
+                    document.querySelectorAll('.edit-product-btn').forEach(btn => {
+                        applyMagnetic(btn);
+                        btn.addEventListener('click', function(e) {
+                            createRipple(e, btn);
+                            const id = this.dataset.id;
+                            const product = state.products.find(p => p.id === id);
+                            if (product) openEditProductDialog(product);
+                        });
+                    });
+                    document.querySelectorAll('.delete-product-btn').forEach(btn => {
+                        applyMagnetic(btn);
+                        btn.addEventListener('click', function(e) {
+                            createRipple(e, btn);
+                            const id = this.dataset.id;
+                            if (confirm('Are you sure you want to delete this product?')) deleteProduct(id);
+                        });
+                    });
+                    document.querySelectorAll('.view-details-btn').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            const id = this.dataset.id;
+                            const product = state.products.find(p => p.id === id);
+                            if (product) openViewDetailsDialog(product);
+                        });
+                    });
+                }
+            }
+
+            loadState();
+            renderApp();
+            setTimeout(observeRevealElements, 200);
+            document.querySelectorAll('.magnetic-area').forEach(el => applyMagnetic(el));
+        })();
+    </script>
+</body>
+</html>

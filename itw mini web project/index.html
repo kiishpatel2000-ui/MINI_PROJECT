@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroPower - Premium Electrical Shop & Repair Services</title>
+    <meta name="description" content="Your one-stop shop for premium electrical products and professional repair services. TVs, LED lights, speakers, fans, and more.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f5a623'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' dy='.1em' font-size='18' font-weight='bold' fill='%23162032'%3E⚡%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'oklch(0.98 0.005 250)',
+                        foreground: 'oklch(0.15 0.03 250)',
+                        card: 'oklch(1 0 0)',
+                        'card-foreground': 'oklch(0.15 0.03 250)',
+                        popover: 'oklch(1 0 0)',
+                        'popover-foreground': 'oklch(0.15 0.03 250)',
+                        primary: { DEFAULT: 'oklch(0.25 0.08 250)', foreground: 'oklch(0.98 0 0)' },
+                        secondary: { DEFAULT: 'oklch(0.88 0.15 95)', foreground: 'oklch(0.2 0.05 250)' },
+                        muted: { DEFAULT: 'oklch(0.95 0.01 250)', foreground: 'oklch(0.45 0.02 250)' },
+                        accent: { DEFAULT: 'oklch(0.88 0.15 95)', foreground: 'oklch(0.15 0.03 250)' },
+                        destructive: { DEFAULT: 'oklch(0.577 0.245 27.325)', foreground: 'oklch(0.98 0 0)' },
+                        border: 'oklch(0.90 0.01 250)',
+                        input: 'oklch(0.92 0.01 250)',
+                        ring: 'oklch(0.25 0.08 250)',
+                        sidebar: { DEFAULT: 'oklch(0.18 0.05 250)', foreground: 'oklch(0.98 0 0)' },
+                    },
+                    borderRadius: {
+                        sm: 'calc(0.625rem - 4px)',
+                        md: 'calc(0.625rem - 2px)',
+                        lg: '0.625rem',
+                        xl: 'calc(0.625rem + 4px)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'monospace'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --background: oklch(0.98 0.005 250);
+            --foreground: oklch(0.15 0.03 250);
+            --card: oklch(1 0 0);
+            --card-foreground: oklch(0.15 0.03 250);
+            --primary: oklch(0.25 0.08 250);
+            --primary-foreground: oklch(0.98 0 0);
+            --secondary: oklch(0.88 0.15 95);
+            --secondary-foreground: oklch(0.2 0.05 250);
+            --accent: oklch(0.88 0.15 95);
+            --radius: 0.625rem;
+        }
+
+        * {
+            border-color: var(--border);
+        }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: default;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: oklch(0.7 0.05 250); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: oklch(0.5 0.08 250); }
+
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            z-index: 9999;
+            background: linear-gradient(90deg, #f5a623, #f7c948, #ff6b35);
+            border-radius: 0 2px 2px 0;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 12px rgba(245, 166, 35, 0.7), 0 0 24px rgba(245, 166, 35, 0.4);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(36px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 6px currentColor; }
+            50% { opacity: 0.3; box-shadow: 0 0 16px currentColor; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-18px); }
+        }
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(1deg); }
+            66% { transform: translateY(5px) rotate(-1deg); }
+        }
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 166, 35, 0.3), 0 0 60px rgba(245, 166, 35, 0.1); }
+            50% { box-shadow: 0 0 35px rgba(245, 166, 35, 0.6), 0 0 90px rgba(245, 166, 35, 0.25); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes bolt-flash {
+            0%, 100% { opacity: 0; }
+            5% { opacity: 0.9; }
+            10% { opacity: 0; }
+            15% { opacity: 0.6; }
+            20% { opacity: 0; }
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes border-glow {
+            0%, 100% { border-color: rgba(245, 166, 35, 0.3); box-shadow: 0 0 15px rgba(245, 166, 35, 0.1); }
+            50% { border-color: rgba(245, 166, 35, 0.8); box-shadow: 0 0 30px rgba(245, 166, 35, 0.35); }
+        }
+
+        .animate-fade-in-up { animation: fadeInUp 0.7s ease-out forwards; }
+        .animate-fade-in-scale { animation: fadeInScale 0.5s ease-out forwards; }
+        .animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+        .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+        .animate-bolt-flash { animation: bolt-flash 3s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+        .animate-border-glow { animation: border-glow 2.5s ease-in-out infinite; }
+        .animation-delay-100 { animation-delay: 0.1s; }
+        .animation-delay-200 { animation-delay: 0.2s; }
+        .animation-delay-300 { animation-delay: 0.3s; }
+        .animation-delay-400 { animation-delay: 0.4s; }
+        .animation-delay-500 { animation-delay: 0.5s; }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform, box-shadow;
+        }
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, currentColor 0%, #f5a623 25%, #f7c948 50%, #f5a623 75%, currentColor 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg,
+                    oklch(0.18 0.06 255) 0%,
+                    oklch(0.25 0.08 250) 30%,
+                    oklch(0.15 0.05 260) 60%,
+                    oklch(0.20 0.07 245) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mobile-menu {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+        .mobile-menu.open { max-height: 400px; }
+
+        .toast-notification {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(245, 166, 35, 0.3);
+        }
+
+        .glow-orb {
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .product-image-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .product-image-wrapper img {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+        .card-hover:hover .product-image-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .magnetic-area {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hero-video-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #back-to-top {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        #back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-anim 0.7s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes ripple-anim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Product Modal Styles */
+        .product-modal { transition: opacity 0.25s ease; }
+        .product-modal .modal-card { transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1); }
+        .product-modal.open { opacity: 1; pointer-events: auto; }
+        .product-modal.open .modal-card { transform: scale(1); }
+        .review-item { transition: all 0.2s; }
+        .review-item:hover { background: var(--muted); }
+        .star-filled { color: var(--secondary); fill: var(--secondary); }
+        .star-empty { color: #bcc3d0; }
+
+        @media (max-width: 768px) {
+            .glow-orb { filter: blur(40px); opacity: 0.25; }
+            .hero-video-bg { opacity: 0.25; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div id="scroll-progress" style="width: 0%;"></div>
+    <button id="back-to-top" class="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-2xl hover:bg-secondary/90 transition-all border-2 border-secondary-foreground/20 animate-glow-pulse" aria-label="Back to top">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+
+    <div id="app" class="flex flex-col min-h-screen">
+        <header class="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70 transition-shadow duration-300" id="main-header">
+            <div class="container mx-auto px-4 flex h-16 items-center justify-between">
+                <a href="index.html" class="flex items-center gap-2 font-bold text-xl text-foreground no-underline group">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/30">
+                        <svg class="h-5 w-5 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </span>
+                    <span class="shimmer-text">ElectroPower</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-medium text-foreground hover:text-secondary transition-colors no-underline relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-secondary after:transition-all hover:after:w-full">Home</a>
+                    <a href="products.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-secondary after:transition-all hover:after:w-full">Products</a>
+                    <a href="repair.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-secondary after:transition-all hover:after:w-full">Repair</a>
+                    <a href="about.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-secondary after:transition-all hover:after:w-full">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-secondary after:transition-all hover:after:w-full">Contact</a>
+                    <a href="admin.html" class="text-sm font-medium text-secondary hover:text-secondary/80 transition-colors no-underline relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-secondary after:transition-all hover:after:w-full">Admin</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="cart.html" class="relative inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-background hover:bg-muted transition-all duration-300 hover:shadow-md no-underline magnetic-area" aria-label="Cart">
+                        <svg class="h-5 w-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
+                        <span id="cart-count" class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground shadow-md" style="display:none;">0</span>
+                    </a>
+                    <button id="mobile-menu-btn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-background hover:bg-muted transition-colors magnetic-area" aria-label="Toggle menu">
+                        <svg id="menu-icon-open" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                        <svg id="menu-icon-close" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="mobile-menu hidden md:hidden border-t bg-background">
+                <nav class="flex flex-col p-4 gap-3">
+                    <a href="index.html" class="text-sm font-medium text-foreground hover:text-secondary transition-colors no-underline py-2">Home</a>
+                    <a href="products.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline py-2">Products</a>
+                    <a href="repair.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline py-2">Repair</a>
+                    <a href="about.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline py-2">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors no-underline py-2">Contact</a>
+                    <a href="admin.html" class="text-sm font-medium text-secondary hover:text-secondary/80 transition-colors no-underline py-2">Admin</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            <!-- Hero Section -->
+            <section class="relative overflow-hidden hero-gradient py-20 lg:py-36" id="hero-section">
+                <video autoplay muted loop playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%231a1a3e'/%3E%3C/svg%3E" class="hero-video-bg" id="hero-video">
+                    <source src="108458-680697604.mp4" type="video/mp4">
+                </video>
+                <canvas id="hero-canvas" class="hero-canvas"></canvas>
+                <div class="glow-orb w-72 h-72 bg-secondary/50 top-[-80px] right-[-80px] animate-float-slow"></div>
+                <div class="glow-orb w-48 h-48 bg-blue-400/30 bottom-[-40px] left-[-60px] animate-float-slow"></div>
+                <div class="glow-orb w-32 h-32 bg-purple-400/25 top-[40%] left-[20%] animate-float"></div>
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:40px_40px] z-[2]"></div>
+                <div class="container relative mx-auto px-4 max-w-7xl z-[3]">
+                    <div class="grid items-center gap-12 lg:grid-cols-2">
+                        <div class="space-y-8 animate-fade-in-up">
+                            <div class="inline-flex items-center rounded-full bg-secondary/20 px-4 py-2 text-sm text-secondary border border-secondary/30 animate-border-glow">
+                                <span class="mr-2 h-2 w-2 animate-pulse-dot rounded-full bg-secondary"></span>
+                                Now Open for Online Orders
+                            </div>
+                            <h1 class="text-4xl font-bold leading-tight tracking-tight text-primary-foreground md:text-5xl lg:text-6xl">
+                                <span class="text-balance">Power Your Home with <span class="text-secondary shimmer-text">Premium</span> Electronics</span>
+                            </h1>
+                            <p class="max-w-lg text-lg text-primary-foreground/75">
+                                Discover top-quality TVs, LED lights, speakers, fans, and more. Plus, professional
+                                repair services to keep your electronics running perfectly.
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <a href="products.html" class="magnetic-area inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-secondary-foreground hover:bg-secondary/90 transition-all no-underline shadow-lg hover:shadow-2xl hover:shadow-secondary/30 relative overflow-hidden group">
+                                    <span class="relative z-10">Shop Now</span>
+                                    <svg class="h-4 w-4 relative z-10 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                                </a>
+                                <a href="repair.html" class="magnetic-area inline-flex items-center gap-2 rounded-lg border border-primary-foreground/30 px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-primary-foreground/10 transition-all no-underline hover:border-primary-foreground/60 relative overflow-hidden group">
+                                    <span class="relative z-10">Book Repair</span>
+                                    <svg class="h-4 w-4 relative z-10 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="relative hidden lg:flex items-center justify-center animate-fade-in-scale animation-delay-300">
+                            <div class="relative w-80 h-80 flex items-center justify-center">
+                                <div class="absolute inset-0 rounded-full bg-secondary/15 animate-glow-pulse"></div>
+                                <div class="absolute inset-4 rounded-full bg-secondary/10 animate-spin-slow" style="border: 2px dashed rgba(245,166,35,0.4);"></div>
+                                <div class="relative z-10 text-[140px] animate-float select-none">⚡</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Bar -->
+            <section class="border-b bg-background py-6 relative z-10">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+                        <div class="flex items-center gap-3 reveal-on-scroll">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 flex-shrink-0 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            </div>
+                            <div><h3 class="font-semibold text-foreground text-sm">Free Shipping</h3><p class="text-xs text-muted-foreground">On orders over $99</p></div>
+                        </div>
+                        <div class="flex items-center gap-3 reveal-on-scroll" style="transition-delay: 0.1s;">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 flex-shrink-0 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div><h3 class="font-semibold text-foreground text-sm">2 Year Warranty</h3><p class="text-xs text-muted-foreground">On all products</p></div>
+                        </div>
+                        <div class="flex items-center gap-3 reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 flex-shrink-0 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                            </div>
+                            <div><h3 class="font-semibold text-foreground text-sm">Expert Support</h3><p class="text-xs text-muted-foreground">24/7 customer service</p></div>
+                        </div>
+                        <div class="flex items-center gap-3 reveal-on-scroll" style="transition-delay: 0.3s;">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 flex-shrink-0 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            </div>
+                            <div><h3 class="font-semibold text-foreground text-sm">Professional Repair</h3><p class="text-xs text-muted-foreground">Certified technicians</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="py-16 lg:py-24">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="mb-12 text-center reveal-on-scroll">
+                        <h2 class="mb-4 text-3xl font-bold text-foreground md:text-4xl">Shop by Category</h2>
+                        <p class="mx-auto max-w-2xl text-muted-foreground">Explore our wide range of electrical products organized by category</p>
+                    </div>
+                    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        <a href="products.html?category=TV" class="no-underline group reveal-on-scroll">
+                            <div class="card-hover rounded-xl border border-border bg-card p-8 text-center cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-secondary/0 transition-all group-hover:bg-secondary/5 z-0"></div>
+                                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 transition-all group-hover:bg-primary group-hover:scale-110 mx-auto relative z-10 duration-300">
+                                    <svg class="h-8 w-8 text-primary transition-colors group-hover:text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                                </div>
+                                <h3 class="mb-1 text-lg font-semibold text-foreground relative z-10">Televisions</h3>
+                                <p class="text-sm text-muted-foreground relative z-10">45+ Products</p>
+                                <svg class="mt-4 h-5 w-5 mx-auto text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </a>
+                        <a href="products.html?category=LED%20Lights" class="no-underline group reveal-on-scroll" style="transition-delay: 0.1s;">
+                            <div class="card-hover rounded-xl border border-border bg-card p-8 text-center cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-secondary/0 transition-all group-hover:bg-secondary/5 z-0"></div>
+                                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 transition-all group-hover:bg-primary group-hover:scale-110 mx-auto relative z-10 duration-300">
+                                    <svg class="h-8 w-8 text-primary transition-colors group-hover:text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+                                </div>
+                                <h3 class="mb-1 text-lg font-semibold text-foreground relative z-10">LED Lights</h3>
+                                <p class="text-sm text-muted-foreground relative z-10">120+ Products</p>
+                                <svg class="mt-4 h-5 w-5 mx-auto text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </a>
+                        <a href="products.html?category=Speakers" class="no-underline group reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <div class="card-hover rounded-xl border border-border bg-card p-8 text-center cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-secondary/0 transition-all group-hover:bg-secondary/5 z-0"></div>
+                                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 transition-all group-hover:bg-primary group-hover:scale-110 mx-auto relative z-10 duration-300">
+                                    <svg class="h-8 w-8 text-primary transition-colors group-hover:text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><circle cx="12" cy="14" r="4"/><line x1="12" y1="6" x2="12.01" y2="6"/></svg>
+                                </div>
+                                <h3 class="mb-1 text-lg font-semibold text-foreground relative z-10">Speakers</h3>
+                                <p class="text-sm text-muted-foreground relative z-10">85+ Products</p>
+                                <svg class="mt-4 h-5 w-5 mx-auto text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </a>
+                        <a href="products.html?category=Fans" class="no-underline group reveal-on-scroll" style="transition-delay: 0.3s;">
+                            <div class="card-hover rounded-xl border border-border bg-card p-8 text-center cursor-pointer relative overflow-hidden">
+                                <div class="absolute inset-0 bg-secondary/0 transition-all group-hover:bg-secondary/5 z-0"></div>
+                                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 transition-all group-hover:bg-primary group-hover:scale-110 mx-auto relative z-10 duration-300">
+                                    <svg class="h-8 w-8 text-primary transition-colors group-hover:text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4"/><path d="M12 18v4"/><circle cx="12" cy="12" r="6"/><path d="M12 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+                                </div>
+                                <h3 class="mb-1 text-lg font-semibold text-foreground relative z-10">Fans</h3>
+                                <p class="text-sm text-muted-foreground relative z-10">60+ Products</p>
+                                <svg class="mt-4 h-5 w-5 mx-auto text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Products (WITH VIEW BUTTON) -->
+            <section id="products" class="bg-muted py-16 lg:py-24">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="mb-12 flex flex-col items-center justify-between gap-4 sm:flex-row reveal-on-scroll">
+                        <div>
+                            <h2 class="mb-2 text-3xl font-bold text-foreground md:text-4xl">Featured Products</h2>
+                            <p class="text-muted-foreground">Hand-picked quality electronics for your home</p>
+                        </div>
+                        <a href="products.html" class="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted transition-all no-underline hover:shadow-md group">
+                            View All Products
+                            <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" id="featured-products-container"></div>
+                </div>
+            </section>
+
+            <!-- Repair Services -->
+            <section id="repair" class="py-16 lg:py-24">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="mb-12 text-center reveal-on-scroll">
+                        <h2 class="mb-4 text-3xl font-bold text-foreground md:text-4xl">Professional Repair Services</h2>
+                        <p class="mx-auto max-w-2xl text-muted-foreground">Expert technicians ready to fix your electronic devices quickly and affordably</p>
+                    </div>
+                    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 reveal-on-scroll"><div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20"><svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg></div><h3 class="mb-2 text-lg font-semibold text-foreground">TV Repair</h3><p class="text-sm text-muted-foreground">Expert repair for all TV brands - LCD, LED, OLED, and Smart TVs</p></div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 reveal-on-scroll"><div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20"><svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><circle cx="12" cy="14" r="4"/><line x1="12" y1="6" x2="12.01" y2="6"/></svg></div><h3 class="mb-2 text-lg font-semibold text-foreground">Speaker Repair</h3><p class="text-sm text-muted-foreground">Professional audio equipment repair and speaker restoration</p></div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 reveal-on-scroll"><div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20"><svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></div><h3 class="mb-2 text-lg font-semibold text-foreground">LED Light Repair</h3><p class="text-sm text-muted-foreground">Fix faulty LED panels, strips, and smart lighting systems</p></div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 reveal-on-scroll"><div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20"><svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4"/><path d="M12 18v4"/><circle cx="12" cy="12" r="6"/><path d="M12 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg></div><h3 class="mb-2 text-lg font-semibold text-foreground">Fan Repair</h3><p class="text-sm text-muted-foreground">Ceiling, tower, and portable fan maintenance and repair</p></div>
+                    </div>
+                    <div class="mt-10 text-center reveal-on-scroll">
+                        <a href="repair.html" class="magnetic-area inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-primary/90 transition-all no-underline shadow-lg hover:shadow-2xl hover:shadow-primary/25 relative overflow-hidden group">
+                            <span class="relative z-10">Book a Repair</span>
+                            <svg class="h-4 w-4 relative z-10 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials - FIXED COLOR (white cards + gold stars) -->
+            <section class="py-16 lg:py-24 bg-muted">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="mb-12 text-center reveal-on-scroll">
+                        <h2 class="mb-4 text-3xl font-bold text-foreground md:text-4xl">What Our Customers Say</h2>
+                        <p class="mx-auto max-w-2xl text-muted-foreground">Join thousands of satisfied customers who trust ElectroPower</p>
+                    </div>
+                    <div class="grid gap-6 md:grid-cols-3" id="testimonials-container"></div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="py-16 lg:py-24">
+                <div class="container mx-auto px-4 max-w-7xl reveal-on-scroll">
+                    <div class="rounded-xl bg-secondary p-8 md:p-12 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+                        <div class="flex flex-col items-center gap-6 text-center md:flex-row md:text-left relative z-10">
+                            <div class="flex-1">
+                                <h2 class="mb-2 text-2xl font-bold text-secondary-foreground md:text-3xl">Need Expert Advice?</h2>
+                                <p class="text-secondary-foreground/80">Our team is ready to help you find the perfect electronics for your needs.</p>
+                            </div>
+                            <div class="flex gap-4 flex-wrap justify-center">
+                                <a href="contact.html" class="magnetic-area inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-primary/90 transition-all no-underline shadow-lg hover:shadow-xl">Contact Us</a>
+                                <a href="products.html" class="magnetic-area inline-flex items-center gap-2 rounded-lg border border-secondary-foreground/30 px-6 py-3 text-base font-semibold text-secondary-foreground hover:bg-secondary-foreground/10 transition-all no-underline">Browse Shop</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t bg-sidebar text-sidebar-foreground">
+            <div class="container mx-auto px-4 max-w-7xl py-12">
+                <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="space-y-4">
+                        <a href="index.html" class="flex items-center gap-2 font-bold text-xl text-sidebar-foreground no-underline group">
+                            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary transition-all group-hover:shadow-lg group-hover:shadow-secondary/30">
+                                <svg class="h-5 w-5 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            </span>
+                            <span>ElectroPower</span>
+                        </a>
+                        <p class="text-sm text-sidebar-foreground/70">Your trusted source for premium electronics and professional repair services since 2010.</p>
+                    </div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/80">Quick Links</h4><nav class="flex flex-col gap-2"><a href="index.html" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Home</a><a href="products.html" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Products</a><a href="repair.html" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Repair Services</a><a href="contact.html" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Contact</a></nav></div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/80">Categories</h4><nav class="flex flex-col gap-2"><a href="products.html?category=TV" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Televisions</a><a href="products.html?category=LED%20Lights" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">LED Lights</a><a href="products.html?category=Speakers" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Speakers</a><a href="products.html?category=Fans" class="text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Fans</a></nav></div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/80">Contact Us</h4><div class="space-y-2 text-sm text-sidebar-foreground/70"><p>123 Electric Avenue</p><p>Tech City, TC 12345</p><p>Phone: (555) 123-4567</p><p>Email: info@electropower.com</p></div></div>
+                </div>
+                <div class="mt-10 pt-8 border-t border-sidebar-border text-center text-sm text-sidebar-foreground/50"><p>&copy; 2026 ElectroPower. All rights reserved.</p></div>
+            </div>
+        </footer>
+    </div>
+    <div id="contact"></div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[110] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Product Modal (same as products page) -->
+    <div id="product-modal" class="product-modal fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="modal-card bg-card rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-border/50">
+            <div class="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-border p-5 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-foreground">Product Details</h3>
+                <button id="close-modal-btn" class="h-10 w-10 rounded-full hover:bg-muted transition-colors flex items-center justify-center">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="p-6" id="modal-product-content"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // --- Product Data (shared with admin) ---
+            const STORAGE_KEY = 'electropower_admin_data';
+            const DEFAULT_PRODUCTS = [
+                { id: 'p1', name: 'Smart LED TV 55"', category: 'TV', price: 699.99, rating: 4.8, inStock: true, description: '4K UHD Smart TV with HDR', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80', specifications: { 'Screen Size': '55"', 'Resolution': '4K UHD' }, features: ['HDR10+', 'Smart TV', 'Voice Control'], reviews: [{ user: 'John D.', rating: 5, comment: 'Great TV!', date: '2025-01-15' }] },
+                { id: 'p2', name: 'Bluetooth Soundbar', category: 'Speakers', price: 199.99, rating: 4.6, inStock: true, description: '360W Dolby Atmos Soundbar', image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=600&q=80', specifications: { 'Power': '360W' }, features: ['Dolby Atmos', 'Wireless'], reviews: [] },
+                { id: 'p3', name: 'Smart LED Bulb 4-Pack', category: 'LED Lights', price: 39.99, rating: 4.9, inStock: true, description: 'WiFi enabled RGB bulbs', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80', specifications: { 'Wattage': '9W' }, features: ['App Controlled', 'Works with Alexa'], reviews: [] },
+                { id: 'p4', name: 'Ceiling Fan Deluxe', category: 'Fans', price: 149.99, rating: 4.7, inStock: false, description: 'Quiet 5-speed remote', image: 'https://images.unsplash.com/photo-1585155967849-91c736589c91?auto=format&fit=crop&w=600&q=80', specifications: { 'Blade Span': '52"' }, features: ['Silent Operation'], reviews: [] },
+                { id: 'p5', name: 'OLED TV 65"', category: 'TV', price: 1299.99, rating: 4.9, inStock: true, description: 'OLED 4K Smart TV', image: 'https://images.unsplash.com/photo-1567690187548-f07b1d7bf5a1?auto=format&fit=crop&w=600&q=80', specifications: { 'Display': 'OLED' }, features: ['AI Upscaling'], reviews: [] },
+                { id: 'p6', name: 'Portable Speaker', category: 'Speakers', price: 79.99, rating: 4.5, inStock: true, description: 'Waterproof Bluetooth speaker', image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=600&q=80', specifications: { 'Battery': '12hrs' }, features: ['Portable'], reviews: [] },
+                { id: 'p7', name: 'LED Strip Light', category: 'LED Lights', price: 24.99, rating: 4.4, inStock: true, description: 'RGB LED strip', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=600&q=80', specifications: { 'Length': '16ft' }, features: ['Music Sync'], reviews: [] },
+                { id: 'p8', name: 'Tower Fan', category: 'Fans', price: 89.99, rating: 4.6, inStock: true, description: 'Oscillating tower fan', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80', specifications: { 'Height': '40"' }, features: ['Remote Control'], reviews: [] },
+            ];
+            function loadProducts() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        if (data.products && data.products.length) return data.products;
+                    } catch(e) {}
+                }
+                return DEFAULT_PRODUCTS;
+            }
+            let products = loadProducts();
+
+            // Helper: Add review from frontend
+            function addCustomerReview(productId, review) {
+                const product = products.find(p => p.id === productId);
+                if (!product) return false;
+                product.reviews = product.reviews || [];
+                product.reviews.unshift(review);
+                const total = product.reviews.reduce((sum, r) => sum + r.rating, 0);
+                product.rating = total / product.reviews.length;
+                let adminData = { products, orders: [], repairRequests: [] };
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        adminData.orders = parsed.orders || [];
+                        adminData.repairRequests = parsed.repairRequests || [];
+                    } catch(e) {}
+                }
+                adminData.products = products;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(adminData));
+                return true;
+            }
+
+            // Render Stars
+            function renderStars(rating) {
+                let html = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) html += `<svg class="h-4 w-4 star-filled inline-block" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                    else html += `<svg class="h-4 w-4 star-empty inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                }
+                return html;
+            }
+
+            // Feature products container
+            const featuredContainer = document.getElementById('featured-products-container');
+            const featuredProducts = products.slice(0, 4);
+
+            // Render product card WITH VIEW BUTTON
+            function renderProductCard(product, index) {
+                const badgeHTML = product.badge ? `<span class="absolute top-3 left-3 z-10 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground shadow-lg">${product.badge}</span>` : '';
+                const imageUrl = product.image || '';
+                return `
+                <div class="card-hover rounded-xl border border-border bg-card overflow-hidden flex flex-col reveal-on-scroll" style="transition-delay: ${index * 0.1}s;">
+                    <div class="relative aspect-video bg-muted product-image-wrapper overflow-hidden">
+                        ${badgeHTML}
+                        <img src="${imageUrl}" alt="${product.name}" class="w-full h-full object-cover z-0" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <span class="hidden absolute inset-0 items-center justify-center text-5xl bg-muted z-0">⚡</span>
+                        ${!product.inStock ? '<span class="absolute top-3 right-3 bg-destructive text-destructive-foreground text-xs font-semibold px-2 py-0.5 rounded-full">Out of Stock</span>' : ''}
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <p class="text-xs text-muted-foreground mb-1 uppercase tracking-wider">${product.category}</p>
+                        <h3 class="font-semibold text-foreground mb-1 text-lg leading-tight">${product.name}</h3>
+                        <p class="text-sm text-muted-foreground mb-3 flex-1 line-clamp-2">${product.description}</p>
+                        <div class="flex items-center gap-1 mb-3">${renderStars(product.rating)}<span class="text-xs text-muted-foreground ml-1">(${product.rating})</span></div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">$${product.price.toFixed(2)}</span>
+                            <div class="flex gap-1">
+                                <button class="view-product-btn magnetic-area inline-flex items-center justify-center rounded-lg bg-secondary/20 hover:bg-secondary/40 text-secondary-foreground w-9 h-9 transition-all" data-id="${product.id}" title="View Details">
+                                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                                <button class="add-to-cart-btn magnetic-area inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all cursor-pointer border-none relative overflow-hidden shadow-md hover:shadow-lg" data-product-id="${product.id}" ${!product.inStock ? 'disabled' : ''}>
+                                    <span class="relative z-10 flex items-center gap-1.5"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>Add</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+            if (featuredContainer) featuredContainer.innerHTML = featuredProducts.map((p, i) => renderProductCard(p, i)).join('');
+
+            // Testimonials (light cards)
+            const testimonials = [
+                { name: 'Sarah Johnson', role: 'Homeowner', content: 'ElectroPower fixed my Samsung TV within 24 hours. The technician was professional and the pricing was fair. Highly recommended!', rating: 5 },
+                { name: 'Michael Chen', role: 'Business Owner', content: 'I\'ve been buying all my office electronics from ElectroPower for 3 years. Great products, competitive prices, and excellent service.', rating: 5 },
+                { name: 'Emily Davis', role: 'Interior Designer', content: 'The LED lighting solutions from ElectroPower transformed my client\'s home. The quality is outstanding and installation was seamless.', rating: 5 },
+            ];
+            const testimonialsContainer = document.getElementById('testimonials-container');
+            if (testimonialsContainer) {
+                testimonialsContainer.innerHTML = testimonials.map((t, i) => {
+                    const starsHTML = Array.from({ length: t.rating }, () => '<svg class="h-5 w-5 text-secondary" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>').join('');
+                    return `<div class="rounded-xl border border-border bg-card p-6 shadow-sm card-hover reveal-on-scroll" style="transition-delay: ${i * 0.15}s;"><div class="mb-4 flex">${starsHTML}</div><p class="mb-6 text-foreground/80 italic">"${t.content}"</p><div><p class="font-semibold text-foreground">${t.name}</p><p class="text-sm text-muted-foreground">${t.role}</p></div></div>`;
+                }).join('');
+            }
+
+            // Modal and review logic (same as products page)
+            const modal = document.getElementById('product-modal');
+            const modalContent = document.getElementById('modal-product-content');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+            function showProductModal(product) {
+                if (!modal || !modalContent) return;
+                const starsHtml = (rating) => {
+                    let html = '';
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= rating) html += `<svg class="h-5 w-5 star-filled inline-block" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                        else html += `<svg class="h-5 w-5 star-empty inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                    }
+                    return html;
+                };
+                const stockBadge = product.inStock 
+                    ? '<span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"><span class="mr-1 h-1.5 w-1.5 rounded-full bg-green-600"></span>In Stock</span>'
+                    : '<span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"><span class="mr-1 h-1.5 w-1.5 rounded-full bg-red-600"></span>Out of Stock</span>';
+                const imageUrl = product.image || '';
+                const specsHtml = product.specifications ? Object.entries(product.specifications).map(([k,v]) => `<div class="flex justify-between py-2 border-b border-border/50"><span class="font-medium">${k}</span><span class="text-muted-foreground">${v}</span></div>`).join('') : '<p class="text-muted-foreground">No specifications provided.</p>';
+                const featuresHtml = (product.features || []).map(f => `<li class="flex items-start gap-2"><svg class="h-4 w-4 text-secondary mt-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>${f}</li>`).join('') || '<li class="text-muted-foreground">No features listed.</li>';
+                const reviewsHtml = (product.reviews || []).map(r => `<div class="review-item p-3 rounded-lg border border-border/50 mb-3"><div class="flex items-center gap-2 flex-wrap"><div class="flex gap-0.5">${Array.from({length:5},(_,i)=>`<svg class="h-4 w-4 ${i<r.rating?'star-filled':'star-empty'}" viewBox="0 0 24 24" fill="${i<r.rating?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`)}</div><span class="font-medium">${r.user}</span><span class="text-xs text-muted-foreground">${r.date}</span></div><p class="text-sm text-foreground mt-1">${r.comment}</p></div>`).join('') || '<p class="text-muted-foreground">No reviews yet. Be the first to review!</p>';
+                modalContent.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-6 mb-6">
+                        <div class="md:w-1/2 bg-muted rounded-xl overflow-hidden flex items-center justify-center min-h-[200px]">
+                            ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" class="w-full h-auto object-cover max-h-[300px]" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-6xl\\'>📦</span>';">` : '<span class="text-6xl">📦</span>'}
+                        </div>
+                        <div class="md:w-1/2 space-y-4">
+                            <div><span class="text-xs uppercase tracking-wider text-muted-foreground">${product.category}</span></div>
+                            <h2 class="text-2xl font-bold text-foreground">${product.name}</h2>
+                            <div class="flex items-center gap-2">${starsHtml(product.rating)}<span class="text-sm text-muted-foreground">(${product.rating})</span></div>
+                            <p class="text-muted-foreground">${product.description}</p>
+                            <div class="flex items-center justify-between pt-2">
+                                <span class="text-3xl font-bold text-foreground">$${product.price.toFixed(2)}</span>
+                                ${stockBadge}
+                            </div>
+                            <button class="add-to-cart-modal-btn w-full mt-2 magnetic-area inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-primary/90 transition-all shadow-md" data-id="${product.id}">
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border-t border-border pt-6 mt-2">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div><h4 class="font-semibold text-lg mb-3">📋 Specifications</h4><div class="bg-muted/30 rounded-lg p-3">${specsHtml}</div></div>
+                            <div><h4 class="font-semibold text-lg mb-3">✨ Key Features</h4><ul class="list-none space-y-1">${featuresHtml}</ul></div>
+                        </div>
+                        <div class="mt-6"><h4 class="font-semibold text-lg mb-3">⭐ Customer Reviews</h4><div class="max-h-64 overflow-y-auto pr-2 space-y-2" id="modal-reviews-container">${reviewsHtml}</div><button id="modal-add-review-btn" class="mt-4 inline-flex items-center gap-2 text-sm text-secondary hover:text-secondary/80 font-medium"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Write a Review</button></div>
+                    </div>
+                `;
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                const modalAddBtn = modalContent.querySelector('.add-to-cart-modal-btn');
+                if (modalAddBtn) modalAddBtn.addEventListener('click', (e) => { addToCart(product, modalAddBtn); modalAddBtn.style.transform = 'scale(0.95)'; setTimeout(() => modalAddBtn.style.transform = 'scale(1)', 180); });
+                const modalReviewBtn = document.getElementById('modal-add-review-btn');
+                if (modalReviewBtn) modalReviewBtn.addEventListener('click', () => showReviewForm(product));
+            }
+
+            function showReviewForm(product) {
+                const formOverlay = document.createElement('div');
+                formOverlay.className = 'fixed inset-0 z-[130] flex items-center justify-center bg-black/60 backdrop-blur-sm';
+                formOverlay.innerHTML = `
+                    <div class="bg-card rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl border border-border">
+                        <h3 class="text-lg font-semibold mb-4">Write a Review for ${product.name}</h3>
+                        <form id="review-form-modal" class="space-y-4">
+                            <div><label class="block text-sm font-medium mb-1">Your Name</label><input type="text" id="reviewer-name" required class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"></div>
+                            <div><label class="block text-sm font-medium mb-1">Rating</label><select id="reviewer-rating" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"><option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option></select></div>
+                            <div><label class="block text-sm font-medium mb-1">Your Review</label><textarea id="reviewer-comment" rows="3" required class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"></textarea></div>
+                            <div class="flex justify-end gap-3"><button type="button" id="cancel-review-modal" class="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted">Cancel</button><button type="submit" class="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/90">Submit Review</button></div>
+                        </form>
+                    </div>
+                `;
+                document.body.appendChild(formOverlay);
+                const cancelBtn = formOverlay.querySelector('#cancel-review-modal');
+                const form = formOverlay.querySelector('#review-form-modal');
+                cancelBtn.addEventListener('click', () => formOverlay.remove());
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const user = formOverlay.querySelector('#reviewer-name').value.trim();
+                    const rating = parseInt(formOverlay.querySelector('#reviewer-rating').value);
+                    const comment = formOverlay.querySelector('#reviewer-comment').value.trim();
+                    if (user && comment) {
+                        const newReview = { user, rating, comment, date: new Date().toISOString().split('T')[0] };
+                        addCustomerReview(product.id, newReview);
+                        const updatedProduct = products.find(p => p.id === product.id);
+                        if (updatedProduct) showProductModal(updatedProduct);
+                        formOverlay.remove();
+                        showToast('⭐ Thank you for your review!', 'success');
+                    } else { showToast('Please fill all fields', 'warning'); }
+                });
+            }
+
+            function closeModal() {
+                if (!modal) return;
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+            // Cart Functions
+            let cartCount = 0;
+            const cartCountEl = document.getElementById('cart-count');
+            function updateCartCount() { if (cartCountEl) { cartCountEl.textContent = cartCount; cartCountEl.style.display = cartCount > 0 ? 'flex' : 'none'; } }
+            function addToCart(product, btnElement) {
+                let cart = JSON.parse(localStorage.getItem('electropower_cart') || '[]');
+                const existing = cart.find(i => i.id === product.id);
+                if (existing) existing.quantity += 1;
+                else cart.push({ ...product, quantity: 1 });
+                localStorage.setItem('electropower_cart', JSON.stringify(cart));
+                cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+                updateCartCount();
+                showToast(`✅ ${product.name} added to cart!`);
+                if (btnElement) {
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple';
+                    ripple.style.left = '50%'; ripple.style.top = '50%'; ripple.style.width = '20px'; ripple.style.height = '20px';
+                    ripple.style.marginLeft = '-10px'; ripple.style.marginTop = '-10px';
+                    btnElement.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 700);
+                    btnElement.style.transform = 'scale(0.88)';
+                    setTimeout(() => btnElement.style.transform = 'scale(1)', 180);
+                }
+            }
+            function showToast(msg, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                const bgColors = { success: 'bg-green-600', info: 'bg-foreground', warning: 'bg-yellow-600' };
+                toast.className = `toast-item pointer-events-auto ${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl text-sm font-medium max-w-xs`;
+                toast.textContent = msg;
+                container.appendChild(toast);
+                setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 2500);
+            }
+
+            // Attach event listeners after DOM ready
+            document.addEventListener('click', function(e) {
+                const addBtn = e.target.closest('.add-to-cart-btn');
+                if (addBtn) {
+                    const productId = addBtn.getAttribute('data-product-id');
+                    const product = products.find(p => p.id === productId);
+                    if (product) addToCart(product, addBtn);
+                }
+                const viewBtn = e.target.closest('.view-product-btn');
+                if (viewBtn) {
+                    const id = viewBtn.getAttribute('data-id');
+                    const product = products.find(p => p.id === id);
+                    if (product) showProductModal(product);
+                }
+            });
+
+            // Update cart count from localStorage on load
+            function loadCartCount() {
+                const cart = JSON.parse(localStorage.getItem('electropower_cart') || '[]');
+                cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+                updateCartCount();
+            }
+            loadCartCount();
+
+            // Mobile menu, scroll progress, back to top, reveal observer, magnetic, canvas (same as original)
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isOpen = mobileMenu.classList.contains('open');
+                    if (isOpen) {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    } else {
+                        mobileMenu.classList.remove('hidden');
+                        requestAnimationFrame(() => mobileMenu.classList.add('open'));
+                        menuIconOpen.classList.add('hidden');
+                        menuIconClose.classList.remove('hidden');
+                    }
+                });
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    });
+                });
+            }
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                if (progressBar) progressBar.style.width = progress + '%';
+            });
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => { if (window.scrollY > 500) backToTopBtn.classList.add('visible'); else backToTopBtn.classList.remove('visible'); });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) { el.classList.add('visible'); revealObserver.unobserve(el); }
+                });
+            }, 200);
+            document.querySelectorAll('.magnetic-area').forEach(btn => {
+                btn.addEventListener('mousemove', function(e) {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                });
+                btn.addEventListener('mouseleave', function() { btn.style.transform = 'translate(0px, 0px)'; });
+            });
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => { if (window.scrollY > 10) header.style.boxShadow = '0 4px 24px rgba(0,0,0,0.1)'; else header.style.boxShadow = 'none'; });
+            const canvas = document.getElementById('hero-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let particles = [], animationId;
+                function resizeCanvas() { const hero = document.getElementById('hero-section'); canvas.width = hero.offsetWidth; canvas.height = hero.offsetHeight; }
+                class Particle { constructor() { this.reset(); } reset() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.vx = (Math.random() - 0.5) * 1.2; this.vy = (Math.random() - 0.5) * 1.2; this.size = Math.random() * 2.5 + 0.8; this.alpha = Math.random() * 0.7 + 0.3; this.decay = Math.random() * 0.008 + 0.003; this.color = Math.random() < 0.5 ? '245, 166, 35' : '255, 255, 255'; } update() { this.x += this.vx; this.y += this.vy; this.alpha -= this.decay; if (this.alpha <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) { this.reset(); this.alpha = Math.random() * 0.7 + 0.3; } } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`; ctx.fill(); ctx.beginPath(); ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI * 2); ctx.fillStyle = `rgba(${this.color}, ${this.alpha * 0.15})`; ctx.fill(); } }
+                function initParticles() { const count = Math.min(Math.floor((canvas.width * canvas.height) / 8000), 150); particles = []; for (let i = 0; i < count; i++) particles.push(new Particle()); }
+                function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1; const gridSize = 50; for (let x = gridSize; x < canvas.width; x += gridSize) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); } for (let y = gridSize; y < canvas.height; y += gridSize) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); } particles.forEach(p => { p.update(); p.draw(); }); if (Math.random() < 0.015) drawLightningBolt(); animationId = requestAnimationFrame(animateParticles); }
+                function drawLightningBolt() {
+                    const startX = Math.random() * canvas.width; let x = startX, y = 0;
+                    ctx.strokeStyle = 'rgba(245,166,35,0.8)'; ctx.lineWidth = 2; ctx.shadowColor = 'rgba(245,166,35,0.9)'; ctx.shadowBlur = 18;
+                    ctx.beginPath(); ctx.moveTo(x, y);
+                    const segments = 8 + Math.floor(Math.random() * 10); const segHeight = canvas.height / segments;
+                    for (let i = 0; i < segments; i++) { x += (Math.random() - 0.5) * 120; y += segHeight; ctx.lineTo(x, Math.min(y, canvas.height)); }
+                    ctx.stroke(); ctx.shadowBlur = 0;
+                    if (Math.random() < 0.6) {
+                        const branchX = startX + (Math.random() - 0.5) * 160; const branchY = canvas.height * (0.3 + Math.random() * 0.5);
+                        ctx.strokeStyle = 'rgba(245,166,35,0.5)'; ctx.lineWidth = 1.2; ctx.shadowColor = 'rgba(245,166,35,0.5)'; ctx.shadowBlur = 10;
+                        ctx.beginPath(); ctx.moveTo(startX + (Math.random() - 0.5) * 40, branchY - 30); ctx.lineTo(branchX, branchY); ctx.lineTo(branchX + (Math.random() - 0.5) * 60, branchY + 40);
+                        ctx.stroke(); ctx.shadowBlur = 0;
+                    }
+                }
+                resizeCanvas(); initParticles(); animateParticles();
+                window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+                const heroObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { if (!animationId) animateParticles(); } else { if (animationId) { cancelAnimationFrame(animationId); animationId = null; } } }); }, { threshold: 0.05 });
+                heroObserver.observe(document.getElementById('hero-section'));
+            }
+            const video = document.getElementById('hero-video');
+            if (video) { video.addEventListener('error', () => video.style.display = 'none'); video.play().catch(() => video.style.display = 'none'); }
+        })();
+    </script>
+</body>
+</html>

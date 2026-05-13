@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - ElectroPower | Premium Electrical Shop & Repair Services</title>
+    <meta name="description" content="Learn about ElectroPower - founded by Jagdish Patel with 15+ years of experience in premium electrical products and expert repair services.">
+    <meta name="generator" content="ElectroPower">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e2a83a'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' dy='.1em' font-size='18' font-weight='bold' fill='%23162032'%3E⚡%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#f5f7fa',
+                        foreground: '#1a1f2e',
+                        card: '#ffffff',
+                        'card-foreground': '#1a1f2e',
+                        popover: '#ffffff',
+                        'popover-foreground': '#1a1f2e',
+                        primary: {
+                            DEFAULT: '#1e2d4a',
+                            foreground: '#f8f9fb',
+                        },
+                        secondary: {
+                            DEFAULT: '#e2a83a',
+                            foreground: '#1a1f2e',
+                        },
+                        muted: {
+                            DEFAULT: '#edf0f5',
+                            foreground: '#5a6377',
+                        },
+                        accent: {
+                            DEFAULT: '#e2a83a',
+                            foreground: '#1a1f2e',
+                        },
+                        destructive: {
+                            DEFAULT: '#d14343',
+                            foreground: '#f8f9fb',
+                        },
+                        border: '#dde1e8',
+                        input: '#e4e8ef',
+                        ring: '#1e2d4a',
+                        sidebar: {
+                            DEFAULT: '#141c2b',
+                            foreground: '#f8f9fb',
+                        },
+                    },
+                    borderRadius: {
+                        sm: 'calc(0.625rem - 4px)',
+                        md: 'calc(0.625rem - 2px)',
+                        lg: '0.625rem',
+                        xl: 'calc(0.625rem + 4px)',
+                        '2xl': '1rem',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'monospace'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.7s ease-out forwards',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'pulse-dot': 'pulseDot 2s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        pulseDot: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.35' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --background: #f5f7fa;
+            --foreground: #1a1f2e;
+            --card: #ffffff;
+            --card-foreground: #1a1f2e;
+            --primary: #1e2d4a;
+            --primary-foreground: #f8f9fb;
+            --secondary: #e2a83a;
+            --secondary-foreground: #1a1f2e;
+            --muted: #edf0f5;
+            --muted-foreground: #5a6377;
+            --accent: #e2a83a;
+            --accent-foreground: #1a1f2e;
+            --border: #dde1e8;
+            --input: #e4e8ef;
+            --ring: #1e2d4a;
+            --radius: 0.625rem;
+            --sidebar: #141c2b;
+            --sidebar-foreground: #f8f9fb;
+        }
+
+        * {
+            border-color: var(--border);
+        }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c1c9d6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b95a8; }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+            background: linear-gradient(90deg, #e2a83a, #f0c45a, #ff8c42);
+            border-radius: 0 2px 2px 0; transition: width 0.1s linear;
+            box-shadow: 0 0 14px rgba(226,168,58,0.5), 0 0 28px rgba(226,168,58,0.25);
+        }
+
+        /* Back to top */
+        #back-to-top {
+            transition: all 0.35s ease; opacity: 0; transform: translateY(20px); pointer-events: none;
+        }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+        /* Ripple */
+        .ripple {
+            position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4);
+            transform: scale(0); animation: ripple-anim 0.7s ease-out forwards; pointer-events: none;
+        }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
+        /* Magnetic */
+        .magnetic-area { transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94); }
+
+        /* Toast */
+        .toast-item {
+            box-shadow: 0 12px 36px rgba(0,0,0,0.18); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(226,168,58,0.35);
+        }
+
+        /* Card hover */
+        .card-hover {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.10);
+        }
+
+        /* Glow orb */
+        .glow-orb {
+            border-radius: 50%; filter: blur(55px); opacity: 0.3; pointer-events: none; position: absolute;
+        }
+
+        /* Canvas */
+        #hero-canvas {
+            position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;
+        }
+
+        /* Reveal on scroll */
+        .reveal-on-scroll {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.65s ease-out, transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        .reveal-on-scroll.visible { opacity: 1; transform: translateY(0); }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0; overflow: hidden;
+        }
+        .mobile-menu.open { max-height: 350px; }
+
+        /* Other existing styles */
+        .hero-gradient {
+            background: linear-gradient(160deg, #1e2d4a 0%, #263554 30%, #1a253d 100%);
+        }
+        .owner-gradient {
+            background: linear-gradient(135deg, #1e2d4a 0%, #2a3d5c 50%, #1e2d4a 100%);
+        }
+        .radial-glow {
+            background: radial-gradient(circle at top right, rgba(226, 168, 58, 0.18) 0%, transparent 55%);
+        }
+        ::selection {
+            background-color: rgba(226, 168, 58, 0.30);
+            color: #1a1f2e;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress" style="width: 0%;"></div>
+    <!-- Back to Top -->
+    <button id="back-to-top" class="fixed bottom-7 right-7 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-2xl hover:bg-secondary/90 transition-all border-2 border-secondary-foreground/15" aria-label="Back to top" title="Back to top">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[110] flex flex-col gap-2 pointer-events-none"></div>
+
+    <div id="app" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm transition-shadow duration-300" id="main-header">
+            <div class="container mx-auto px-4 max-w-7xl flex h-16 items-center justify-between">
+                <a href="index.html" class="flex items-center gap-2.5 font-bold text-xl text-foreground no-underline hover:opacity-85 transition-opacity group">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary transition-all group-hover:shadow-lg group-hover:shadow-primary/25">
+                        <svg class="h-5 w-5 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </span>
+                    <span class="tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ElectroPower</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Home</a>
+                    <a href="products.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Products</a>
+                    <a href="repair.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Repair</a>
+                    <a href="about.html" class="text-sm font-semibold text-primary no-underline relative after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-secondary after:rounded-full">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="cart.html" class="relative inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-white hover:bg-muted transition-all duration-300 hover:shadow-md no-underline magnetic-area" aria-label="Cart">
+                        <svg class="h-5 w-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
+                        <span id="cart-count-badge" class="absolute -top-1 -right-1 hidden h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground shadow-md">0</span>
+                    </a>
+                    <button id="mobile-menu-btn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-white hover:bg-muted transition-colors magnetic-area" aria-label="Toggle menu">
+                        <svg id="menu-icon-open" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                        <svg id="menu-icon-close" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="mobile-menu hidden md:hidden border-t bg-white">
+                <nav class="flex flex-col p-4 gap-2">
+                    <a href="index.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Home</a>
+                    <a href="products.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Products</a>
+                    <a href="repair.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Repair</a>
+                    <a href="about.html" class="text-sm font-semibold text-primary no-underline py-2.5 px-3 rounded-lg bg-muted">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1">
+            <!-- Hero Section with Canvas & Video Background -->
+            <section class="relative hero-gradient py-20 md:py-28 overflow-hidden" id="hero-section">
+                <canvas id="hero-canvas"></canvas>
+                <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none z-0" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%231a253d'/%3E%3C/svg%3E">
+                    <source src="https://cdn.coverr.co/videos/coverr-electric-sparks-2784/1080p.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 radial-glow z-0"></div>
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:48px_48px] z-0"></div>
+                <div class="glow-orb w-48 h-48 bg-secondary/25 top-[-60px] right-[-70px] animate-float z-0" style="animation-delay: 0s;"></div>
+                <div class="glow-orb w-32 h-32 bg-blue-400/20 bottom-[-30px] left-[-50px] animate-float z-0" style="animation-delay: 2s;"></div>
+                <div class="container relative mx-auto px-4 max-w-7xl z-10">
+                    <div class="max-w-3xl mx-auto text-center">
+                        <div class="inline-flex items-center gap-2 rounded-full bg-secondary/15 px-4 py-2 text-sm text-secondary/90 mb-8 animate-fade-in">
+                            <span class="h-2 w-2 rounded-full bg-secondary animate-pulse-dot"></span>
+                            Est. 2010 &bull; 15+ Years of Excellence
+                        </div>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-5 tracking-tight leading-tight animate-fade-in-up reveal-on-scroll">
+                            About ElectroPower
+                        </h1>
+                        <p class="text-lg md:text-xl text-primary-foreground/75 max-w-2xl mx-auto leading-relaxed animate-fade-in-up reveal-on-scroll" style="animation-delay: 0.1s;">
+                            Your trusted partner for premium electrical products and expert repair services
+                        </p>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent z-10"></div>
+            </section>
+
+            <!-- Owner Section -->
+            <section class="py-16 md:py-28">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                        <!-- Image Block -->
+                        <div class="relative reveal-on-scroll">
+                            <div class="aspect-square rounded-2xl owner-gradient flex items-center justify-center overflow-hidden shadow-2xl shadow-primary/20 relative">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" alt="Jagdish Patel" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay" onerror="this.style.display='none';">
+                                <div class="w-44 h-44 md:w-52 md:h-52 rounded-full bg-secondary/20 flex items-center justify-center border-4 border-secondary/30 backdrop-blur-sm animate-float z-10">
+                                    <span class="text-7xl md:text-8xl font-extrabold text-secondary drop-shadow-lg">JP</span>
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-5 -right-5 bg-secondary text-secondary-foreground px-6 py-3.5 rounded-xl shadow-xl z-20">
+                                <p class="font-bold text-sm">15+ Years</p>
+                                <p class="text-xs opacity-80">Experience</p>
+                            </div>
+                            <div class="absolute -top-4 -left-4 w-24 h-24 border-2 border-dashed border-secondary/30 rounded-full hidden lg:block"></div>
+                        </div>
+
+                        <!-- Text Content -->
+                        <div class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <span class="text-secondary font-semibold text-sm uppercase tracking-widest">Founder &amp; Owner</span>
+                            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-5 tracking-tight">
+                                Jagdish Patel
+                            </h2>
+                            <p class="text-muted-foreground text-base md:text-lg mb-5 leading-relaxed">
+                                With over <strong class="text-foreground">15 years of experience</strong> in the electrical industry, Jagdish Patel founded
+                                ElectroPower with a simple mission: to provide high-quality electrical products and
+                                exceptional repair services to the community.
+                            </p>
+                            <p class="text-muted-foreground mb-5 leading-relaxed">
+                                Starting from a small repair shop, Jagdish has grown ElectroPower into a trusted
+                                destination for all electrical needs. His commitment to customer satisfaction,
+                                technical expertise, and honest business practices has earned the trust of thousands
+                                of customers over the years.
+                            </p>
+                            <blockquote class="border-l-4 border-secondary pl-5 py-2 mb-8 italic text-foreground/80 bg-secondary/5 rounded-r-lg">
+                                "Our goal is not just to sell products, but to build lasting relationships with
+                                our customers by providing genuine products and reliable service."
+                            </blockquote>
+                            <div class="flex flex-wrap gap-4">
+                                <a href="contact.html" class="magnetic-area inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/85 transition-all no-underline shadow-lg hover:shadow-xl relative overflow-hidden">
+                                    <span class="relative z-10 flex items-center gap-2">Contact Us <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                                </a>
+                                <a href="products.html" class="magnetic-area inline-flex items-center gap-2 rounded-lg border border-border bg-white px-6 py-3 text-sm font-semibold text-foreground hover:bg-muted transition-all no-underline relative overflow-hidden">
+                                    <span class="relative z-10 flex items-center gap-2">View Products <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="py-16 md:py-20 bg-muted/60 border-y border-border/50">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+                        <div class="text-center reveal-on-scroll">
+                            <p class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary mb-2 tracking-tight">15<span class="text-secondary">+</span></p>
+                            <p class="text-sm md:text-base text-muted-foreground font-medium">Years Experience</p>
+                        </div>
+                        <div class="text-center reveal-on-scroll" style="transition-delay:0.1s;">
+                            <p class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary mb-2 tracking-tight">5000<span class="text-secondary">+</span></p>
+                            <p class="text-sm md:text-base text-muted-foreground font-medium">Happy Customers</p>
+                        </div>
+                        <div class="text-center reveal-on-scroll" style="transition-delay:0.2s;">
+                            <p class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary mb-2 tracking-tight">1000<span class="text-secondary">+</span></p>
+                            <p class="text-sm md:text-base text-muted-foreground font-medium">Products Sold</p>
+                        </div>
+                        <div class="text-center reveal-on-scroll" style="transition-delay:0.3s;">
+                            <p class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary mb-2 tracking-tight">3000<span class="text-secondary">+</span></p>
+                            <p class="text-sm md:text-base text-muted-foreground font-medium">Repairs Completed</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Values Section -->
+            <section class="py-16 md:py-28">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="text-center mb-14 reveal-on-scroll">
+                        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 tracking-tight">Our Core Values</h2>
+                        <p class="text-muted-foreground max-w-2xl mx-auto text-lg">These principles guide everything we do at ElectroPower</p>
+                    </div>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 md:p-7 reveal-on-scroll shadow-sm" style="transition-delay:0s;">
+                            <div class="w-12 h-12 bg-secondary/15 rounded-xl flex items-center justify-center mb-5"><svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Quality Assurance</h3>
+                            <p class="text-muted-foreground text-sm leading-relaxed">We only stock genuine, high-quality products from trusted brands with proper warranties.</p>
+                        </div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 md:p-7 reveal-on-scroll shadow-sm" style="transition-delay:0.1s;">
+                            <div class="w-12 h-12 bg-secondary/15 rounded-xl flex items-center justify-center mb-5"><svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Customer First</h3>
+                            <p class="text-muted-foreground text-sm leading-relaxed">Your satisfaction is our priority. We go the extra mile to ensure you're happy with every purchase.</p>
+                        </div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 md:p-7 reveal-on-scroll shadow-sm" style="transition-delay:0.2s;">
+                            <div class="w-12 h-12 bg-secondary/15 rounded-xl flex items-center justify-center mb-5"><svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Expert Service</h3>
+                            <p class="text-muted-foreground text-sm leading-relaxed">Our skilled technicians provide professional repair services with quick turnaround times.</p>
+                        </div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 md:p-7 reveal-on-scroll shadow-sm" style="transition-delay:0s;">
+                            <div class="w-12 h-12 bg-secondary/15 rounded-xl flex items-center justify-center mb-5"><svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Timely Delivery</h3>
+                            <p class="text-muted-foreground text-sm leading-relaxed">We understand your time is valuable. Count on us for prompt delivery and service.</p>
+                        </div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 md:p-7 reveal-on-scroll shadow-sm" style="transition-delay:0.1s;">
+                            <div class="w-12 h-12 bg-secondary/15 rounded-xl flex items-center justify-center mb-5"><svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 100 4h4a2 2 0 110 4H8"/><path d="M12 18V6"/></svg></div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Fair Pricing</h3>
+                            <p class="text-muted-foreground text-sm leading-relaxed">Competitive prices without compromising on quality. Best value for your money.</p>
+                        </div>
+                        <div class="card-hover rounded-xl border border-border bg-card p-6 md:p-7 reveal-on-scroll shadow-sm" style="transition-delay:0.2s;">
+                            <div class="w-12 h-12 bg-secondary/15 rounded-xl flex items-center justify-center mb-5"><svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Community Focus</h3>
+                            <p class="text-muted-foreground text-sm leading-relaxed">We're proud to serve our local community and build lasting relationships.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mission Section -->
+            <section class="py-16 md:py-24 hero-gradient relative overflow-hidden">
+                <canvas id="mission-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+                <div class="absolute inset-0 radial-glow z-0"></div>
+                <div class="container relative mx-auto px-4 max-w-7xl z-10">
+                    <div class="max-w-3xl mx-auto text-center reveal-on-scroll">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-secondary/20 mb-8">
+                            <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6 tracking-tight">Our Mission</h2>
+                        <p class="text-lg md:text-xl text-primary-foreground/85 leading-relaxed max-w-2xl mx-auto">
+                            To be the most trusted electrical shop in the region by providing premium products, exceptional repair services, and an outstanding customer experience. We strive to make technology accessible and reliable for every home and business.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="py-16 md:py-28">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="bg-muted rounded-2xl p-8 md:p-14 text-center reveal-on-scroll shadow-inner">
+                        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 tracking-tight">Ready to Experience the ElectroPower Difference?</h2>
+                        <p class="text-muted-foreground mb-8 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">Visit our store or browse our online catalog. We are here to help you find the perfect electrical products for your needs.</p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="products.html" class="magnetic-area inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/85 transition-all no-underline shadow-lg hover:shadow-xl relative overflow-hidden">
+                                <span class="relative z-10 flex items-center gap-2">Shop Now <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                            </a>
+                            <a href="repair.html" class="magnetic-area inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-white px-7 py-3.5 text-base font-semibold text-foreground hover:bg-muted transition-all no-underline shadow-sm hover:shadow-md relative overflow-hidden">
+                                <span class="relative z-10 flex items-center gap-2">Book a Repair <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t bg-sidebar text-sidebar-foreground">
+            <div class="container mx-auto px-4 max-w-7xl py-12">
+                <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="space-y-4">
+                        <a href="/" class="flex items-center gap-2.5 font-bold text-xl text-sidebar-foreground no-underline hover:opacity-85 transition-opacity group">
+                            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary transition-all group-hover:shadow-lg group-hover:shadow-secondary/25"><svg class="h-5 w-5 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+                            <span>ElectroPower</span>
+                        </a>
+                        <p class="text-sm text-sidebar-foreground/65">Your trusted source for premium electronics and professional repair services since 2010.</p>
+                    </div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Quick Links</h4><nav class="flex flex-col gap-2.5"><a href="index.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Home</a><a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Products</a><a href="repair.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Repair Services</a><a href="contact.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Contact</a></nav></div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Categories</h4><nav class="flex flex-col gap-2.5"><a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Televisions</a><a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">LED Lights</a><a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Speakers</a><a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Fans</a></nav></div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Contact Us</h4><div class="space-y-2 text-sm text-sidebar-foreground/60"><p>123 Electric Avenue</p><p>Tech City, TC 12345</p><p>Phone: (555) 123-4567</p><p>Email: info@electropower.com</p></div></div>
+                </div>
+                <div class="mt-10 pt-8 border-t border-sidebar-border/20 text-center text-sm text-sidebar-foreground/40"><p>&copy; 2026 ElectroPower. All rights reserved.</p></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            // --- Scroll Progress Bar ---
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                if (progressBar) progressBar.style.width = progress + '%';
+            });
+
+            // --- Back to Top ---
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) backToTopBtn.classList.add('visible');
+                else backToTopBtn.classList.remove('visible');
+            });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // --- Header Shadow ---
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => {
+                header.style.boxShadow = window.scrollY > 8 ? '0 4px 28px rgba(0,0,0,0.08)' : '0 1px 3px rgba(0,0,0,0.03)';
+            });
+
+            // --- Mobile Menu ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isOpen = mobileMenu.classList.contains('open');
+                    if (isOpen) {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    } else {
+                        mobileMenu.classList.remove('hidden');
+                        requestAnimationFrame(() => mobileMenu.classList.add('open'));
+                        menuIconOpen.classList.add('hidden');
+                        menuIconClose.classList.remove('hidden');
+                    }
+                });
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    });
+                });
+            }
+
+            // --- Reveal on Scroll Observer ---
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        el.classList.add('visible');
+                        revealObserver.unobserve(el);
+                    }
+                });
+            }, 200);
+
+            // --- Magnetic Effect ---
+            function applyMagnetic(el) {
+                if (el.dataset.magneticBound) return;
+                el.dataset.magneticBound = 'true';
+                el.addEventListener('mousemove', function(e) {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width/2;
+                    const y = e.clientY - rect.top - rect.height/2;
+                    el.style.transform = `translate(${x*0.2}px, ${y*0.2}px)`;
+                });
+                el.addEventListener('mouseleave', () => el.style.transform = 'translate(0,0)');
+            }
+            document.querySelectorAll('.magnetic-area').forEach(el => applyMagnetic(el));
+
+            // --- Ripple Effect ---
+            function createRipple(e, el) {
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                const rect = el.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+                ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+                el.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 700);
+            }
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('.magnetic-area, .add-to-cart-btn, button');
+                if (target) createRipple(e, target);
+            });
+
+            // --- Toast Notification ---
+            function showToast(message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                const bgColors = { success: 'bg-green-600', info: 'bg-foreground', warning: 'bg-secondary' };
+                toast.className = `toast-item pointer-events-auto ${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl text-sm font-medium max-w-xs border border-secondary/30`;
+                toast.textContent = message;
+                container.appendChild(toast);
+                setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 2500);
+            }
+
+            // --- Cart Badge ---
+            function updateCartBadge() {
+                const cart = JSON.parse(localStorage.getItem('electropower_cart') || '[]');
+                const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+                const badge = document.getElementById('cart-count-badge');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'flex' : 'none';
+                }
+            }
+            updateCartBadge();
+
+            // --- Particle Canvas for Hero ---
+            function initCanvas(canvasId, containerSelector) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                let particles = [], animId;
+                const container = document.querySelector(containerSelector) || canvas.parentElement;
+
+                function resize() {
+                    canvas.width = container.offsetWidth;
+                    canvas.height = container.offsetHeight;
+                }
+
+                class Particle {
+                    constructor() { this.reset(); }
+                    reset() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.vx = (Math.random() - 0.5) * 0.8;
+                        this.vy = (Math.random() - 0.5) * 0.8;
+                        this.size = Math.random() * 2 + 0.5;
+                        this.alpha = Math.random() * 0.5 + 0.2;
+                        this.decay = Math.random() * 0.005 + 0.002;
+                    }
+                    update() {
+                        this.x += this.vx; this.y += this.vy;
+                        this.alpha -= this.decay;
+                        if (this.alpha <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                            this.reset(); this.alpha = Math.random() * 0.5 + 0.2;
+                        }
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+                        ctx.fillStyle = `rgba(226,168,58,${this.alpha})`;
+                        ctx.fill();
+                    }
+                }
+
+                function initParticles() {
+                    const count = Math.min(Math.floor((canvas.width * canvas.height) / 10000), 80);
+                    particles = [];
+                    for (let i = 0; i < count; i++) particles.push(new Particle());
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => { p.update(); p.draw(); });
+                    animId = requestAnimationFrame(animate);
+                }
+
+                resize(); initParticles(); animate();
+                window.addEventListener('resize', () => { resize(); initParticles(); });
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !animId) animate();
+                        else if (!entry.isIntersecting && animId) { cancelAnimationFrame(animId); animId = null; }
+                    });
+                }, { threshold: 0.05 });
+                observer.observe(container);
+            }
+
+            initCanvas('hero-canvas', '#hero-section');
+            initCanvas('mission-canvas', 'section');
+
+            console.log('⚡ ElectroPower About Page Enhanced');
+            console.log('👤 Founder: Jagdish Patel | ✨ Animations & Particles Active');
+        })();
+    </script>
+</body>
+</html>

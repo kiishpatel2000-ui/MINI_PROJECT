@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Repair Services - ElectroPower | Premium Electrical Shop</title>
+    <meta name="description" content="Professional repair services for TVs, speakers, LED lights, fans, and more. Expert technicians, quick turnaround, 90-day warranty.">
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#f5f7fa',
+                        foreground: '#1a1f2e',
+                        card: '#ffffff',
+                        'card-foreground': '#1a1f2e',
+                        popover: '#ffffff',
+                        'popover-foreground': '#1a1f2e',
+                        primary: {
+                            DEFAULT: '#1e2d4a',
+                            foreground: '#f8f9fb',
+                        },
+                        secondary: {
+                            DEFAULT: '#e2a83a',
+                            foreground: '#1a1f2e',
+                        },
+                        muted: {
+                            DEFAULT: '#edf0f5',
+                            foreground: '#5a6377',
+                        },
+                        accent: {
+                            DEFAULT: '#e2a83a',
+                            foreground: '#1a1f2e',
+                        },
+                        destructive: {
+                            DEFAULT: '#d14343',
+                            foreground: '#f8f9fb',
+                        },
+                        border: '#dde1e8',
+                        input: '#e4e8ef',
+                        ring: '#1e2d4a',
+                        sidebar: {
+                            DEFAULT: '#141c2b',
+                            foreground: '#f8f9fb',
+                        },
+                    },
+                    borderRadius: {
+                        sm: 'calc(0.625rem - 4px)',
+                        md: 'calc(0.625rem - 2px)',
+                        lg: '0.625rem',
+                        xl: 'calc(0.625rem + 4px)',
+                        '2xl': '1rem',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'monospace'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --background: #f5f7fa;
+            --foreground: #1a1f2e;
+            --primary: #1e2d4a;
+            --primary-foreground: #f8f9fb;
+            --secondary: #e2a83a;
+            --secondary-foreground: #1a1f2e;
+            --muted: #edf0f5;
+            --muted-foreground: #5a6377;
+            --border: #dde1e8;
+            --destructive: #d14343;
+            --destructive-foreground: #f8f9fb;
+            --radius: 0.625rem;
+        }
+        * {
+            border-color: var(--border);
+        }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c9d6;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b95a8;
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            z-index: 9999;
+            background: linear-gradient(90deg, #e2a83a, #f0c45a, #ff8c42);
+            border-radius: 0 2px 2px 0;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 14px rgba(226, 168, 58, 0.5), 0 0 28px rgba(226, 168, 58, 0.25);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 8px rgba(226, 168, 58, 0.3); }
+            50% { box-shadow: 0 0 22px rgba(226, 168, 58, 0.6); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+        @keyframes ripple-anim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .animate-fade-in-scale {
+            animation: fadeInScale 0.4s ease-out forwards;
+        }
+        .animate-shimmer {
+            background: linear-gradient(90deg, #1e2d4a 0%, #e2a83a 30%, #f0c45a 50%, #e2a83a 70%, #1e2d4a 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 2.5s ease-in-out infinite;
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Reveal on scroll */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.65s ease-out, transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+        .mobile-menu.open {
+            max-height: 350px;
+        }
+
+        /* Card hover */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.1);
+        }
+
+        .service-badge {
+            background-color: #edf0f5;
+            color: #5a6377;
+            border-radius: 9999px;
+            padding: 0.125rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Ripple */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.45);
+            transform: scale(0);
+            animation: ripple-anim 0.7s ease-out forwards;
+            pointer-events: none;
+        }
+
+        /* Magnetic */
+        .magnetic-area {
+            transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Toast */
+        .toast-item {
+            box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(226,168,58,0.35);
+        }
+
+        /* Back to top */
+        #back-to-top {
+            transition: all 0.35s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        #back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Glow orb */
+        .glow-orb {
+            border-radius: 50%;
+            filter: blur(55px);
+            opacity: 0.3;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        /* Canvas */
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .btn-press:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-background">
+
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress" style="width: 0%;"></div>
+
+    <!-- Back to Top -->
+    <button id="back-to-top" class="fixed bottom-7 right-7 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-2xl hover:bg-secondary/90 transition-all border-2 border-secondary-foreground/15 animate-pulse-glow" aria-label="Back to top" title="Back to top">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+
+    <div id="app" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 w-full border-b bg-white/94 backdrop-blur-xl supports-[backdrop-filter]:bg-white/75 shadow-sm transition-shadow duration-300" id="main-header">
+            <div class="container mx-auto px-4 max-w-7xl flex h-16 items-center justify-between">
+                <a href="index.html" class="flex items-center gap-2.5 font-bold text-xl text-foreground no-underline hover:opacity-85 transition-opacity group">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary transition-all group-hover:shadow-lg group-hover:shadow-primary/25">
+                        <svg class="h-5 w-5 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </span>
+                    <span class="tracking-tight animate-shimmer">ElectroPower</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Home</a>
+                    <a href="products.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Products</a>
+                    <a href="repair.html" class="text-sm font-semibold text-primary no-underline relative after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-secondary after:rounded-full">Repair</a>
+                    <a href="about.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="cart.html" class="relative inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-white hover:bg-muted transition-all duration-300 hover:shadow-md no-underline magnetic-area" aria-label="Cart">
+                        <svg class="h-5 w-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
+                        <span id="cart-count-badge" class="absolute -top-1 -right-1 hidden h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground shadow-md">0</span>
+                    </a>
+                    <button id="mobile-menu-btn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-white hover:bg-muted transition-colors magnetic-area" aria-label="Toggle menu">
+                        <svg id="menu-icon-open" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                        <svg id="menu-icon-close" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="mobile-menu hidden md:hidden border-t bg-white">
+                <nav class="flex flex-col p-4 gap-2">
+                    <a href="index.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Home</a>
+                    <a href="products.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Products</a>
+                    <a href="repair.html" class="text-sm font-semibold text-primary no-underline py-2.5 px-3 rounded-lg bg-muted">Repair</a>
+                    <a href="about.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1">
+            <!-- Hero Section with Canvas Particles -->
+            <section class="relative bg-primary py-16 lg:py-24 overflow-hidden" id="hero-section">
+                <canvas id="hero-canvas"></canvas>
+                <div class="glow-orb w-48 h-48 bg-secondary/30 top-[-40px] right-[-60px] animate-float" style="animation-delay: 0s;"></div>
+                <div class="glow-orb w-32 h-32 bg-blue-400/25 bottom-[-30px] left-[-40px] animate-float" style="animation-delay: 2s;"></div>
+                <div class="container relative mx-auto px-4 max-w-7xl text-center z-[2]">
+                    <h1 class="mb-4 text-3xl font-bold text-primary-foreground md:text-4xl lg:text-5xl tracking-tight reveal-on-scroll">
+                        Professional Repair Services
+                    </h1>
+                    <p class="mx-auto max-w-2xl text-lg text-primary-foreground/80 reveal-on-scroll" style="transition-delay: 0.08s;">
+                        Expert technicians ready to fix your electronic devices quickly, affordably, and with a warranty you can trust.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Benefits Bar -->
+            <section class="border-b bg-muted py-8">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+                        <div class="flex items-center gap-3 reveal-on-scroll">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-foreground text-sm">Quick Turnaround</h3>
+                                <p class="text-xs text-muted-foreground">Most repairs in 24-48 hours</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 reveal-on-scroll" style="transition-delay: 0.1s;">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-foreground text-sm">90-Day Warranty</h3>
+                                <p class="text-xs text-muted-foreground">All repairs covered</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-foreground text-sm">Certified Technicians</h3>
+                                <p class="text-xs text-muted-foreground">Trained professionals</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 reveal-on-scroll" style="transition-delay: 0.3s;">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 transition-all hover:bg-primary/20 hover:scale-110 duration-300">
+                                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-foreground text-sm">Genuine Parts</h3>
+                                <p class="text-xs text-muted-foreground">Original manufacturer parts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Repair Services Grid -->
+            <section class="py-16">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="mb-12 text-center reveal-on-scroll">
+                        <h2 class="mb-4 text-3xl font-bold text-foreground">Our Repair Services</h2>
+                        <p class="mx-auto max-w-2xl text-muted-foreground">We repair all major brands and types of electrical devices</p>
+                    </div>
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <!-- TV Repair -->
+                        <div class="card-hover bg-card rounded-xl border border-border shadow-sm p-6 reveal-on-scroll" style="transition-delay: 0s;">
+                            <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20 transition-all group-hover:bg-secondary">
+                                <svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-foreground mb-1">TV Repair</h3>
+                            <p class="text-sm text-muted-foreground mb-4">Expert repair services for all TV brands including Samsung, LG, Sony, TCL. We fix LCD, LED, OLED, and Smart TVs.</p>
+                            <p class="text-sm font-medium text-foreground mb-2">Common Issues We Fix:</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> No display</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Sound issues</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Power problems</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Screen damage</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Software issues</span>
+                            </div>
+                            <p class="text-lg font-semibold text-primary">Starting from $49</p>
+                        </div>
+                        <!-- Speaker Repair -->
+                        <div class="card-hover bg-card rounded-xl border border-border shadow-sm p-6 reveal-on-scroll" style="transition-delay: 0.1s;">
+                            <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20 transition-all group-hover:bg-secondary">
+                                <svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><circle cx="12" cy="14" r="4"/><line x1="12" y1="6" x2="12.01" y2="6"/></svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-foreground mb-1">Speaker Repair</h3>
+                            <p class="text-sm text-muted-foreground mb-4">Professional audio equipment repair for home theaters, soundbars, Bluetooth speakers, and more.</p>
+                            <p class="text-sm font-medium text-foreground mb-2">Common Issues We Fix:</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> No sound</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Distorted audio</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Bluetooth issues</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Power failures</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Physical damage</span>
+                            </div>
+                            <p class="text-lg font-semibold text-primary">Starting from $29</p>
+                        </div>
+                        <!-- LED Light Repair -->
+                        <div class="card-hover bg-card rounded-xl border border-border shadow-sm p-6 reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20 transition-all group-hover:bg-secondary">
+                                <svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 008.91 14"/></svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-foreground mb-1">LED Light Repair</h3>
+                            <p class="text-sm text-muted-foreground mb-4">Fix faulty LED panels, strips, smart lighting systems, and decorative LED installations.</p>
+                            <p class="text-sm font-medium text-foreground mb-2">Common Issues We Fix:</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Flickering</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Color issues</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Dead sections</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Controller problems</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Wiring faults</span>
+                            </div>
+                            <p class="text-lg font-semibold text-primary">Starting from $19</p>
+                        </div>
+                        <!-- Fan Repair -->
+                        <div class="card-hover bg-card rounded-xl border border-border shadow-sm p-6 reveal-on-scroll" style="transition-delay: 0.3s;">
+                            <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/20 transition-all group-hover:bg-secondary">
+                                <svg class="h-7 w-7 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><circle cx="12" cy="12" r="6"/><path d="M12 6a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-foreground mb-1">Fan Repair</h3>
+                            <p class="text-sm text-muted-foreground mb-4">Ceiling fan, tower fan, and portable fan maintenance, repair, and installation services.</p>
+                            <p class="text-sm font-medium text-foreground mb-2">Common Issues We Fix:</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Not spinning</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Noisy operation</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Speed issues</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Remote problems</span>
+                                <span class="service-badge"><svg class="h-3 w-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Motor repair</span>
+                            </div>
+                            <p class="text-lg font-semibold text-primary">Starting from $25</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booking Form -->
+            <section class="bg-muted py-16">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="mx-auto max-w-lg reveal-on-scroll">
+                        <div class="bg-card rounded-xl border border-border shadow-sm p-6">
+                            <div class="text-center mb-6">
+                                <h2 class="text-2xl font-bold text-foreground">Book a Repair</h2>
+                                <p class="text-sm text-muted-foreground mt-1">Fill out the form below and we'll contact you to schedule your repair</p>
+                            </div>
+                            <!-- Success State -->
+                            <div id="form-success" class="hidden py-8 text-center fade-in">
+                                <div class="mb-4 flex justify-center">
+                                    <div class="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                                        <svg class="h-8 w-8 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    </div>
+                                </div>
+                                <h3 class="mb-2 text-xl font-semibold text-foreground">Request Submitted!</h3>
+                                <p class="mb-6 text-muted-foreground" id="success-phone-text">We'll contact you within 24 hours to schedule your repair.</p>
+                                <button id="reset-form-btn" class="magnetic-area inline-flex items-center justify-center rounded-lg border border-border bg-white px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted transition-all btn-press hover:shadow-md">
+                                    Submit Another Request
+                                </button>
+                            </div>
+                            <!-- Form -->
+                            <form id="repair-form" class="space-y-4">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-foreground mb-1">Your Name *</label>
+                                    <input type="text" id="name" name="name" required placeholder="John Doe" class="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition shadow-sm">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-foreground mb-1">Phone Number *</label>
+                                    <input type="tel" id="phone" name="phone" required placeholder="+1 (555) 123-4567" class="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition shadow-sm">
+                                </div>
+                                <div>
+                                    <label for="device" class="block text-sm font-medium text-foreground mb-1">Device Name *</label>
+                                    <input type="text" id="device" name="device" required placeholder="e.g., Samsung Smart TV 55 inch" class="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition shadow-sm">
+                                </div>
+                                <button type="submit" id="submit-btn" class="magnetic-area w-full inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all shadow-md hover:shadow-xl btn-press relative overflow-hidden">
+                                    <span id="submit-text">Book Repair Service</span>
+                                    <svg id="submit-spinner" class="h-4 w-4 ml-2 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 019.95 9" stroke-opacity="1"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="py-16">
+                <div class="container mx-auto px-4 max-w-7xl">
+                    <div class="mb-12 text-center reveal-on-scroll">
+                        <h2 class="mb-4 text-3xl font-bold text-foreground">Frequently Asked Questions</h2>
+                    </div>
+                    <div class="mx-auto max-w-3xl space-y-4">
+                        <div class="bg-card rounded-xl border border-border p-6 shadow-sm card-hover reveal-on-scroll" style="transition-delay: 0s;">
+                            <h3 class="mb-2 font-semibold text-foreground">How long does a typical repair take?</h3>
+                            <p class="text-sm text-muted-foreground">Most repairs are completed within 24-48 hours. Complex repairs may take 3-5 business days.</p>
+                        </div>
+                        <div class="bg-card rounded-xl border border-border p-6 shadow-sm card-hover reveal-on-scroll" style="transition-delay: 0.1s;">
+                            <h3 class="mb-2 font-semibold text-foreground">Do you offer home service?</h3>
+                            <p class="text-sm text-muted-foreground">Yes! We offer home service for TVs and ceiling fans. Other devices can be dropped off at our shop.</p>
+                        </div>
+                        <div class="bg-card rounded-xl border border-border p-6 shadow-sm card-hover reveal-on-scroll" style="transition-delay: 0.2s;">
+                            <h3 class="mb-2 font-semibold text-foreground">What warranty do you provide?</h3>
+                            <p class="text-sm text-muted-foreground">All repairs come with a 90-day warranty covering parts and labor.</p>
+                        </div>
+                        <div class="bg-card rounded-xl border border-border p-6 shadow-sm card-hover reveal-on-scroll" style="transition-delay: 0.3s;">
+                            <h3 class="mb-2 font-semibold text-foreground">How do I get a repair estimate?</h3>
+                            <p class="text-sm text-muted-foreground">Submit a repair request and our team will provide a free estimate before any work begins.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t bg-sidebar text-sidebar-foreground mt-auto">
+            <div class="container mx-auto px-4 max-w-7xl py-12">
+                <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="space-y-4">
+                        <a href="/" class="flex items-center gap-2.5 font-bold text-xl text-sidebar-foreground no-underline hover:opacity-85 transition-opacity group">
+                            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary transition-all group-hover:shadow-lg group-hover:shadow-secondary/25">
+                                <svg class="h-5 w-5 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            </span>
+                            <span>ElectroPower</span>
+                        </a>
+                        <p class="text-sm text-sidebar-foreground/65">Your trusted source for premium electronics and professional repair services since 2010.</p>
+                    </div>
+                    <div>
+                        <h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Quick Links</h4>
+                        <nav class="flex flex-col gap-2.5">
+                            <a href="index.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Home</a>
+                            <a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Products</a>
+                            <a href="repair.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Repair Services</a>
+                            <a href="contact.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Contact</a>
+                        </nav>
+                    </div>
+                    <div>
+                        <h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Categories</h4>
+                        <nav class="flex flex-col gap-2.5">
+                            <a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Televisions</a>
+                            <a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">LED Lights</a>
+                            <a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Speakers</a>
+                            <a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Fans</a>
+                        </nav>
+                    </div>
+                    <div>
+                        <h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Contact Us</h4>
+                        <div class="space-y-2 text-sm text-sidebar-foreground/60">
+                            <p>123 Electric Avenue</p>
+                            <p>Tech City, TC 12345</p>
+                            <p>Phone: (555) 123-4567</p>
+                            <p>Email: info@electropower.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 pt-8 border-t border-sidebar-border/20 text-center text-sm text-sidebar-foreground/40">
+                    <p>&copy; 2026 ElectroPower. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[110] flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        (function() {
+            // --- Scroll Progress Bar ---
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                if (progressBar) progressBar.style.width = progress + '%';
+            });
+
+            // --- Back to Top ---
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) backToTopBtn.classList.add('visible');
+                else backToTopBtn.classList.remove('visible');
+            });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // --- Mobile Menu (with smooth height) ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isOpen = mobileMenu.classList.contains('open');
+                    if (isOpen) {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    } else {
+                        mobileMenu.classList.remove('hidden');
+                        requestAnimationFrame(() => mobileMenu.classList.add('open'));
+                        menuIconOpen.classList.add('hidden');
+                        menuIconClose.classList.remove('hidden');
+                    }
+                });
+
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    });
+                });
+            }
+
+            // --- Header Shadow ---
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => {
+                header.style.boxShadow = window.scrollY > 8 ? '0 4px 28px rgba(0,0,0,0.08)' : '0 1px 3px rgba(0,0,0,0.03)';
+            });
+
+            // --- Reveal on Scroll Observer ---
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        el.classList.add('visible');
+                        revealObserver.unobserve(el);
+                    }
+                });
+            }, 200);
+
+            // --- Magnetic Effect ---
+            function applyMagnetic(el) {
+                if (el.dataset.magneticBound) return;
+                el.dataset.magneticBound = 'true';
+                el.addEventListener('mousemove', function(e) {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                });
+                el.addEventListener('mouseleave', function() {
+                    el.style.transform = 'translate(0px, 0px)';
+                });
+            }
+            document.querySelectorAll('.magnetic-area').forEach(el => applyMagnetic(el));
+
+            // --- Cart Badge from localStorage ---
+            function updateCartBadge() {
+                const cart = JSON.parse(localStorage.getItem('electropower_cart') || '[]');
+                const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+                const badge = document.getElementById('cart-count-badge');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'flex' : 'none';
+                }
+            }
+            updateCartBadge();
+            window.addEventListener('storage', updateCartBadge);
+
+            // --- Toast Notification ---
+            function showToast(msg) {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast-item pointer-events-auto bg-foreground/90 backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-2xl text-sm font-medium max-w-xs border border-secondary/30';
+                toast.style.animation = 'fadeInUp 0.4s ease-out forwards';
+                toast.textContent = msg;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2500);
+            }
+
+            // --- Repair Form Logic ---
+            const form = document.getElementById('repair-form');
+            const successDiv = document.getElementById('form-success');
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            const submitSpinner = document.getElementById('submit-spinner');
+            const resetBtn = document.getElementById('reset-form-btn');
+            const successPhoneText = document.getElementById('success-phone-text');
+            const phoneInput = document.getElementById('phone');
+            const nameInput = document.getElementById('name');
+            const deviceInput = document.getElementById('device');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitText.textContent = 'Submitting...';
+                submitSpinner.classList.remove('hidden');
+
+                setTimeout(() => {
+                    const phoneValue = phoneInput.value || 'your phone number';
+                    successPhoneText.textContent = `We'll contact you at ${phoneValue} within 24 hours to schedule your repair.`;
+                    form.classList.add('hidden');
+                    successDiv.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitText.textContent = 'Book Repair Service';
+                    submitSpinner.classList.add('hidden');
+
+                    const repairRequests = JSON.parse(localStorage.getItem('electropower_repairs') || '[]');
+                    repairRequests.push({
+                        id: 'rep-' + Date.now(),
+                        name: nameInput.value,
+                        phone: phoneInput.value,
+                        deviceName: deviceInput.value,
+                        status: 'pending',
+                        createdAt: new Date().toISOString()
+                    });
+                    localStorage.setItem('electropower_repairs', JSON.stringify(repairRequests));
+                    showToast('✅ Repair request submitted successfully!');
+                }, 1200);
+            });
+
+            resetBtn.addEventListener('click', function() {
+                nameInput.value = '';
+                phoneInput.value = '';
+                deviceInput.value = '';
+                successDiv.classList.add('hidden');
+                form.classList.remove('hidden');
+            });
+
+            // --- Hero Canvas Particle System ---
+            const canvas = document.getElementById('hero-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let particles = [];
+                let animId;
+
+                function resizeCanvas() {
+                    const hero = document.getElementById('hero-section');
+                    canvas.width = hero.offsetWidth;
+                    canvas.height = hero.offsetHeight;
+                }
+
+                class Particle {
+                    constructor() { this.reset(); }
+                    reset() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.vx = (Math.random() - 0.5) * 0.8;
+                        this.vy = (Math.random() - 0.5) * 0.8;
+                        this.size = Math.random() * 2 + 0.6;
+                        this.alpha = Math.random() * 0.5 + 0.2;
+                        this.decay = Math.random() * 0.006 + 0.002;
+                    }
+                    update() {
+                        this.x += this.vx;
+                        this.y += this.vy;
+                        this.alpha -= this.decay;
+                        if (this.alpha <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                            this.reset();
+                            this.alpha = Math.random() * 0.5 + 0.2;
+                        }
+                    }
+                    draw(ctx) {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(226,168,58,${this.alpha})`;
+                        ctx.fill();
+                    }
+                }
+
+                function initParticles() {
+                    const count = Math.min(Math.floor((canvas.width * canvas.height) / 10000), 80);
+                    particles = [];
+                    for (let i = 0; i < count; i++) particles.push(new Particle());
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => { p.update(); p.draw(ctx); });
+                    animId = requestAnimationFrame(animate);
+                }
+
+                resizeCanvas();
+                initParticles();
+                animate();
+                window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+                const heroObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !animId) animate();
+                        else if (!entry.isIntersecting && animId) {
+                            cancelAnimationFrame(animId);
+                            animId = null;
+                        }
+                    });
+                }, { threshold: 0.05 });
+                heroObserver.observe(document.getElementById('hero-section'));
+            }
+
+            console.log('🔧 ElectroPower Repair Page Enhanced!');
+            console.log('🎨 Particle canvas animated | ⚡ Magnetic interactions ready');
+        })();
+    </script>
+</body>
+</html>

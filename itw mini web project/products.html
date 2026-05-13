@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Shop Products - ElectroPower | Premium Electrical Shop</title>
+    <meta name="description" content="Browse our collection of premium electrical products - TVs, LED lights, speakers, fans and more.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#f5f7fa',
+                        foreground: '#1a1f2e',
+                        card: '#ffffff',
+                        'card-foreground': '#1a1f2e',
+                        popover: '#ffffff',
+                        'popover-foreground': '#1a1f2e',
+                        primary: { DEFAULT: '#1e2d4a', foreground: '#f8f9fb' },
+                        secondary: { DEFAULT: '#e2a83a', foreground: '#1a1f2e' },
+                        muted: { DEFAULT: '#edf0f5', foreground: '#5a6377' },
+                        accent: { DEFAULT: '#e2a83a', foreground: '#1a1f2e' },
+                        destructive: { DEFAULT: '#d14343', foreground: '#f8f9fb' },
+                        border: '#dde1e8',
+                        input: '#e4e8ef',
+                        ring: '#1e2d4a',
+                        sidebar: { DEFAULT: '#141c2b', foreground: '#f8f9fb' },
+                    },
+                    borderRadius: {
+                        sm: 'calc(0.625rem - 4px)',
+                        md: 'calc(0.625rem - 2px)',
+                        lg: '0.625rem',
+                        xl: 'calc(0.625rem + 4px)',
+                        '2xl': '1rem',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'monospace'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --background: #f5f7fa;
+            --foreground: #1a1f2e;
+            --primary: #1e2d4a;
+            --primary-foreground: #f8f9fb;
+            --secondary: #e2a83a;
+            --secondary-foreground: #1a1f2e;
+            --muted: #edf0f5;
+            --muted-foreground: #5a6377;
+            --border: #dde1e8;
+            --destructive: #d14343;
+            --destructive-foreground: #f8f9fb;
+            --radius: 0.625rem;
+        }
+        * { border-color: var(--border); }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            overflow-x: hidden;
+            cursor: default;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c1c9d6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b95a8; }
+
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+            background: linear-gradient(90deg, #e2a83a, #f0c45a, #ff8c42);
+            border-radius: 0 2px 2px 0; transition: width 0.1s linear;
+            box-shadow: 0 0 14px rgba(226,168,58,0.6), 0 0 28px rgba(226,168,58,0.3);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes pulse-glow {
+            0%,100% { box-shadow: 0 0 8px rgba(226,168,58,0.3); }
+            50% { box-shadow: 0 0 22px rgba(226,168,58,0.6); }
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+        .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+        .animate-fade-in-scale { animation: fadeInScale 0.4s ease-out forwards; }
+        .animate-shimmer { background: linear-gradient(90deg, #1e2d4a 0%, #e2a83a 30%, #f0c45a 50%, #e2a83a 70%, #1e2d4a 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
+        .animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .reveal-on-scroll { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease-out, transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .reveal-on-scroll.visible { opacity: 1; transform: translateY(0); }
+        .mobile-menu { transition: all 0.35s cubic-bezier(0.4,0,0.2,1); max-height: 0; overflow: hidden; }
+        .mobile-menu.open { max-height: 350px; }
+        .sheet-overlay { background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); transition: opacity 0.3s ease; }
+        .sheet-content { transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
+        .sheet-content.open { transform: translateX(0); }
+        .product-card { transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94); will-change: transform, box-shadow; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(0,0,0,0.11); }
+        .product-card .product-image-wrapper img { transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .product-card:hover .product-image-wrapper img { transform: scale(1.07); }
+        .list-view .product-card { display: flex; flex-direction: row; align-items: center; gap: 1.5rem; }
+        .list-view .product-card:hover { transform: translateY(-3px); }
+        .list-view .product-image { width: 130px; height: 130px; flex-shrink: 0; border-radius: 12px; overflow: hidden; }
+        .list-view .product-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        @media (max-width:640px) { .list-view .product-card { flex-direction: column; align-items: stretch; gap: 0.75rem; } .list-view .product-image { width: 100%; height: 180px; } }
+        .star-filled { color: var(--secondary); fill: var(--secondary); }
+        .star-empty { color: #bcc3d0; }
+        .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.45); transform: scale(0); animation: ripple-anim 0.7s ease-out forwards; pointer-events: none; }
+        .magnetic-area { transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .toast-item { box-shadow: 0 12px 36px rgba(0,0,0,0.18); backdrop-filter: blur(10px); border: 1px solid rgba(226,168,58,0.35); }
+        #back-to-top { transition: all 0.35s ease; opacity: 0; transform: translateY(20px); pointer-events: none; }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .glow-orb { border-radius: 50%; filter: blur(55px); opacity: 0.3; pointer-events: none; position: absolute; }
+        #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .btn-press:active { transform: scale(0.95); }
+        .product-modal { transition: opacity 0.25s ease; }
+        .product-modal .modal-card { transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1); }
+        .product-modal.open { opacity: 1; pointer-events: auto; }
+        .product-modal.open .modal-card { transform: scale(1); }
+        .review-item { transition: all 0.2s; }
+        .review-item:hover { background: var(--muted); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-background">
+
+    <div id="scroll-progress" style="width: 0%;"></div>
+    <button id="back-to-top" class="fixed bottom-7 right-7 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-2xl hover:bg-secondary/90 transition-all border-2 border-secondary-foreground/15 animate-pulse-glow" aria-label="Back to top">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+
+    <div id="app" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 w-full border-b bg-white/94 backdrop-blur-xl supports-[backdrop-filter]:bg-white/75 shadow-sm transition-shadow duration-300" id="main-header">
+            <div class="container mx-auto px-4 max-w-7xl flex h-16 items-center justify-between">
+                <a href="index.html" class="flex items-center gap-2.5 font-bold text-xl text-foreground no-underline hover:opacity-85 transition-opacity group">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary transition-all group-hover:shadow-lg group-hover:shadow-primary/25">
+                        <svg class="h-5 w-5 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </span>
+                    <span class="tracking-tight animate-shimmer">ElectroPower</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Home</a>
+                    <a href="products.html" class="text-sm font-semibold text-primary no-underline relative after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-secondary after:rounded-full">Products</a>
+                    <a href="repair.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Repair</a>
+                    <a href="about.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-secondary after:rounded-full after:transition-all hover:after:w-full">Contact</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="cart.html" class="relative inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-white hover:bg-muted transition-all duration-300 hover:shadow-md no-underline magnetic-area" aria-label="Cart">
+                        <svg class="h-5 w-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
+                        <span id="cart-count-badge" class="absolute -top-1 -right-1 hidden h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground shadow-md">0</span>
+                    </a>
+                    <button id="mobile-menu-btn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-white hover:bg-muted transition-colors magnetic-area" aria-label="Toggle menu">
+                        <svg id="menu-icon-open" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                        <svg id="menu-icon-close" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="mobile-menu hidden md:hidden border-t bg-white">
+                <nav class="flex flex-col p-4 gap-2">
+                    <a href="index.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Home</a>
+                    <a href="products.html" class="text-sm font-semibold text-primary no-underline py-2.5 px-3 rounded-lg bg-muted">Products</a>
+                    <a href="repair.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Repair</a>
+                    <a href="about.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">About</a>
+                    <a href="contact.html" class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors no-underline py-2.5 px-3 rounded-lg hover:bg-muted">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1">
+            <section class="relative border-b bg-muted py-10 overflow-hidden" id="hero-section">
+                <canvas id="hero-canvas"></canvas>
+                <div class="glow-orb w-48 h-48 bg-secondary/35 top-[-40px] right-[-60px] animate-float"></div>
+                <div class="glow-orb w-32 h-32 bg-blue-400/25 bottom-[-30px] left-[-40px] animate-float"></div>
+                <div class="container relative mx-auto px-4 max-w-7xl z-[2]">
+                    <h1 class="text-3xl font-bold text-foreground md:text-4xl reveal-on-scroll">Shop Products</h1>
+                    <p class="mt-2 text-muted-foreground reveal-on-scroll" style="transition-delay: 0.08s;">Browse our collection of premium electrical products</p>
+                </div>
+            </section>
+
+            <div class="container mx-auto px-4 max-w-7xl py-8">
+                <div class="flex flex-col gap-8 lg:flex-row">
+                    <!-- Desktop Sidebar -->
+                    <aside class="hidden w-64 shrink-0 lg:block">
+                        <div class="sticky top-24 space-y-6">
+                            <div class="bg-card rounded-xl border border-border shadow-sm reveal-on-scroll">
+                                <div class="p-6"><h3 class="mb-4 font-semibold text-foreground flex items-center gap-2"><svg class="h-4 w-4 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Categories</h3><div class="space-y-1.5" id="desktop-categories"></div></div>
+                            </div>
+                            <div class="bg-card rounded-xl border border-border shadow-sm reveal-on-scroll" style="transition-delay: 0.1s;">
+                                <div class="p-6"><h3 class="mb-4 font-semibold text-foreground flex items-center gap-2"><svg class="h-4 w-4 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Price Range</h3><div class="space-y-1.5" id="desktop-prices"></div></div>
+                            </div>
+                            <div class="bg-card rounded-xl border border-border shadow-sm p-4 reveal-on-scroll" style="transition-delay: 0.2s;">
+                                <label class="flex items-center gap-2.5 cursor-pointer group"><input type="checkbox" id="desktop-instock" class="h-4 w-4 rounded border-input text-primary focus:ring-ring accent-secondary"><span class="text-sm group-hover:text-foreground transition-colors">In Stock Only</span></label>
+                            </div>
+                            <button id="clear-filters-desktop" class="hidden w-full inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-all btn-press hover:shadow-md reveal-on-scroll" style="transition-delay: 0.3s;"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Clear Filters</button>
+                        </div>
+                    </aside>
+
+                    <!-- Main Content Area -->
+                    <div class="flex-1">
+                        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between reveal-on-scroll">
+                            <div class="relative flex-1 sm:max-w-xs">
+                                <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input type="search" id="search-input" placeholder="Search products..." class="w-full rounded-lg border border-input bg-white pl-10 pr-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-all shadow-sm">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button id="mobile-filter-btn" class="lg:hidden inline-flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-all btn-press hover:shadow-md magnetic-area"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>Filters</button>
+                                <select id="sort-select" class="w-40 rounded-lg border border-input bg-white px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/40 cursor-pointer shadow-sm transition-all"><option value="featured">Featured</option><option value="price-asc">Price: Low to High</option><option value="price-desc">Price: High to Low</option><option value="rating-desc">Rating: High to Low</option><option value="name-asc">Name: A to Z</option></select>
+                                <div class="hidden sm:flex rounded-lg border shadow-sm"><button id="grid-view-btn" class="h-9 w-9 inline-flex items-center justify-center rounded-l-lg bg-primary text-primary-foreground transition-all duration-200"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></button><button id="list-view-btn" class="h-9 w-9 inline-flex items-center justify-center rounded-r-lg text-muted-foreground hover:text-foreground transition-all duration-200 bg-white"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button></div>
+                            </div>
+                        </div>
+                        <p id="results-count" class="mb-4 text-sm text-muted-foreground reveal-on-scroll" style="transition-delay: 0.05s;"></p>
+                        <div id="products-container" class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3"></div>
+                        <div id="empty-state" class="hidden bg-card rounded-xl border border-border p-12 text-center reveal-on-scroll"><div class="text-6xl mb-4">🔍</div><p class="mb-2 text-lg font-semibold text-foreground">No products found</p><p class="mb-4 text-muted-foreground">Try adjusting your search or filter criteria</p><button id="clear-filters-empty" class="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-5 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-all btn-press hover:shadow-md">Clear Filters</button></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Filter Sheet -->
+        <div id="sheet-overlay" class="fixed inset-0 z-50 hidden sheet-overlay"></div>
+        <div id="sheet-content" class="fixed top-0 left-0 z-50 h-full w-80 max-w-[85vw] bg-white shadow-2xl sheet-content overflow-y-auto">
+            <div class="p-6 border-b border-border flex items-center justify-between"><h2 class="text-lg font-semibold text-foreground flex items-center gap-2"><svg class="h-5 w-5 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>Filters</h2><button id="close-sheet-btn" class="h-9 w-9 inline-flex items-center justify-center rounded-lg hover:bg-muted transition-all"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+            <div class="p-6 space-y-6"><div><h3 class="mb-3 font-semibold text-foreground">Categories</h3><div class="space-y-1.5" id="mobile-categories"></div></div><div><h3 class="mb-3 font-semibold text-foreground">Price Range</h3><div class="space-y-1.5" id="mobile-prices"></div></div><label class="flex items-center gap-2.5 cursor-pointer group"><input type="checkbox" id="mobile-instock" class="h-4 w-4 rounded border-input text-primary focus:ring-ring accent-secondary"><span class="text-sm group-hover:text-foreground transition-colors">In Stock Only</span></label><button id="clear-filters-mobile" class="hidden w-full inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-all btn-press"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Clear Filters</button></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="border-t bg-sidebar text-sidebar-foreground mt-auto">
+            <div class="container mx-auto px-4 max-w-7xl py-12">
+                <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="space-y-4"><a href="index.html" class="flex items-center gap-2.5 font-bold text-xl text-sidebar-foreground no-underline hover:opacity-85 transition-opacity group"><span class="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary transition-all group-hover:shadow-lg group-hover:shadow-secondary/25"><svg class="h-5 w-5 text-secondary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span>ElectroPower</span></a><p class="text-sm text-sidebar-foreground/65">Your trusted source for premium electronics and professional repair services since 2010.</p></div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Quick Links</h4><nav class="flex flex-col gap-2.5"><a href="index.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Home</a><a href="products.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Products</a><a href="repair.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Repair Services</a><a href="contact.html" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Contact</a></nav></div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Categories</h4><nav class="flex flex-col gap-2.5"><a href="products.html?category=TV" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Televisions</a><a href="products.html?category=LED%20Lights" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">LED Lights</a><a href="products.html?category=Speakers" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Speakers</a><a href="products.html?category=Fans" class="text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors no-underline hover:translate-x-1 inline-block">Fans</a></nav></div>
+                    <div><h4 class="mb-4 text-sm font-semibold uppercase tracking-wider text-sidebar-foreground/75">Contact Us</h4><div class="space-y-2 text-sm text-sidebar-foreground/60"><p>123 Electric Avenue</p><p>Tech City, TC 12345</p><p>Phone: (555) 123-4567</p><p>Email: info@electropower.com</p></div></div>
+                </div>
+                <div class="mt-10 pt-8 border-t border-sidebar-border/20 text-center text-sm text-sidebar-foreground/40"><p>&copy; 2026 ElectroPower. All rights reserved.</p></div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[110] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Product Details Modal (with Full Details & Review Form) -->
+    <div id="product-modal" class="product-modal fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="modal-card bg-card rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-border/50">
+            <div class="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-border p-5 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-foreground">Product Details</h3>
+                <button id="close-modal-btn" class="h-10 w-10 rounded-full hover:bg-muted transition-colors flex items-center justify-center">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="p-6" id="modal-product-content"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // --- Product Data (shared with admin using localStorage) ---
+            const STORAGE_KEY = 'electropower_admin_data';
+            const DEFAULT_PRODUCTS = [
+                { 
+                    id: 'p1', name: 'Smart LED TV 55"', category: 'TV', price: 699.99, rating: 4.8, inStock: true, description: '4K UHD Smart TV with HDR',
+                    image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
+                    specifications: { 'Screen Size': '55"', 'Resolution': '4K UHD', 'Refresh Rate': '120Hz', 'HDMI Ports': '4' },
+                    features: ['HDR10+', 'Smart TV with WebOS', 'Voice Control', 'Bluetooth 5.0'],
+                    reviews: [
+                        { user: 'John D.', rating: 5, comment: 'Amazing picture quality!', date: '2025-01-15' },
+                        { user: 'Sarah K.', rating: 4, comment: 'Great TV, easy setup.', date: '2025-02-10' }
+                    ]
+                },
+                { 
+                    id: 'p2', name: 'Bluetooth Soundbar', category: 'Speakers', price: 199.99, rating: 4.6, inStock: true, description: '360W Dolby Atmos Soundbar',
+                    image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=600&q=80',
+                    specifications: { 'Power': '360W', 'Channels': '3.1.2', 'Connectivity': 'Bluetooth, HDMI, Optical' },
+                    features: ['Dolby Atmos', 'Wireless Subwoofer', 'Built-in Chromecast'],
+                    reviews: [{ user: 'Mike R.', rating: 5, comment: 'Best soundbar under $200!', date: '2025-01-20' }]
+                },
+                { 
+                    id: 'p3', name: 'Smart LED Bulb 4-Pack', category: 'LED Lights', price: 39.99, rating: 4.9, inStock: true, description: 'WiFi enabled RGB bulbs',
+                    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+                    specifications: { 'Wattage': '9W', 'Lumens': '800lm', 'Color': 'RGB+White' },
+                    features: ['App Controlled', 'Works with Alexa', 'Energy Efficient'],
+                    reviews: [{ user: 'Emily W.', rating: 5, comment: 'Love the color options!', date: '2025-01-25' }] 
+                },
+                { 
+                    id: 'p4', name: 'Ceiling Fan Deluxe', category: 'Fans', price: 149.99, rating: 4.7, inStock: false, description: 'Quiet 5-speed remote',
+                    image: 'https://images.unsplash.com/photo-1585155967849-91c736589c91?auto=format&fit=crop&w=600&q=80',
+                    specifications: { 'Blade Span': '52"', 'Speeds': '5', 'Finish': 'Matte Black' },
+                    features: ['Silent Operation', 'Remote Control', 'Summer/Winter Mode'],
+                    reviews: [] 
+                },
+                { id: 'p5', name: 'OLED TV 65"', category: 'TV', price: 1299.99, rating: 4.9, inStock: true, description: 'OLED 4K Smart TV with AI processor', image: 'https://images.unsplash.com/photo-1567690187548-f07b1d7bf5a1?auto=format&fit=crop&w=600&q=80', specifications: { 'Display': 'OLED', 'Resolution': '4K' }, features: ['AI Upscaling', 'Dolby Vision'], reviews: [] },
+                { id: 'p6', name: 'Portable Bluetooth Speaker', category: 'Speakers', price: 79.99, rating: 4.5, inStock: true, description: 'Waterproof Bluetooth 5.3 speaker', image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=600&q=80', specifications: { 'Battery': '12hrs', 'Waterproof': 'IPX7' }, features: ['Portable', 'USB-C Charging'], reviews: [] },
+                { id: 'p7', name: 'LED Strip Light 16ft', category: 'LED Lights', price: 24.99, rating: 4.4, inStock: true, description: 'RGB LED strip with remote control', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=600&q=80', specifications: { 'Length': '16ft', 'Control': 'Remote + App' }, features: ['Music Sync', 'DIY Mode'], reviews: [] },
+                { id: 'p8', name: 'Tower Fan with Remote', category: 'Fans', price: 89.99, rating: 4.3, inStock: true, description: 'Oscillating tower fan with timer', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80', specifications: { 'Height': '40"', 'Speeds': '3' }, features: ['Remote Control', 'Timer'], reviews: [] },
+                { id: 'p9', name: 'HDMI Cable 6ft', category: 'Accessories', price: 12.99, rating: 4.2, inStock: true, description: 'High-speed HDMI 2.1 cable', image: 'https://images.unsplash.com/photo-1622977265115-cce36eb43f18?auto=format&fit=crop&w=600&q=80', specifications: { 'Length': '6ft', 'Version': '2.1' }, features: ['8K Support', 'Ethernet'], reviews: [] },
+                { id: 'p10', name: 'TV Mount Bracket', category: 'Accessories', price: 49.99, rating: 4.6, inStock: true, description: 'Full motion TV wall mount', image: 'https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&w=600&q=80', specifications: { 'Max Weight': '100lbs', 'VESA': '600x400' }, features: ['Tilt & Swivel', 'Easy Install'], reviews: [] },
+            ];
+
+            function loadProducts() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        return (data.products && data.products.length) ? data.products : DEFAULT_PRODUCTS;
+                    } catch(e) { return DEFAULT_PRODUCTS; }
+                }
+                return DEFAULT_PRODUCTS;
+            }
+            let products = loadProducts();
+
+            // --- Helper to save a product's review back to localStorage ---
+            function addCustomerReview(productId, review) {
+                const product = products.find(p => p.id === productId);
+                if (!product) return false;
+                product.reviews = product.reviews || [];
+                product.reviews.unshift(review);
+                // Recalculate average rating
+                const total = product.reviews.reduce((sum, r) => sum + r.rating, 0);
+                product.rating = total / product.reviews.length;
+                // Save back to localStorage
+                let adminData = { products, orders: [], repairRequests: [] };
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        adminData.orders = parsed.orders || [];
+                        adminData.repairRequests = parsed.repairRequests || [];
+                    } catch(e) {}
+                }
+                adminData.products = products;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(adminData));
+                return true;
+            }
+
+            // --- Rest of the product listing logic (filters, search, sorting, cart) ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlCat = urlParams.get('category');
+            let searchQuery = '';
+            let selectedCategory = urlCat && categoriesList().includes(urlCat) ? urlCat : 'All';
+            let selectedPriceIndex = 0;
+            const priceRanges = [
+                { label: 'All Prices', min: 0, max: Infinity },
+                { label: 'Under $50', min: 0, max: 50 },
+                { label: '$50 - $100', min: 50, max: 100 },
+                { label: '$100 - $300', min: 100, max: 300 },
+                { label: '$300 - $500', min: 300, max: 500 },
+                { label: 'Over $500', min: 500, max: Infinity },
+            ];
+            let sortBy = 'featured';
+            let viewMode = 'grid';
+            let inStockOnly = false;
+
+            function categoriesList() {
+                const cats = new Set(products.map(p => p.category));
+                return ['All', ...Array.from(cats).sort()];
+            }
+            let categories = categoriesList();
+
+            // DOM references
+            const searchInput = document.getElementById('search-input');
+            const sortSelect = document.getElementById('sort-select');
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            const listViewBtn = document.getElementById('list-view-btn');
+            const productsContainer = document.getElementById('products-container');
+            const resultsCount = document.getElementById('results-count');
+            const emptyState = document.getElementById('empty-state');
+            const clearFiltersEmpty = document.getElementById('clear-filters-empty');
+            const desktopCategories = document.getElementById('desktop-categories');
+            const desktopPrices = document.getElementById('desktop-prices');
+            const desktopInStock = document.getElementById('desktop-instock');
+            const clearDesktopBtn = document.getElementById('clear-filters-desktop');
+            const mobileCategories = document.getElementById('mobile-categories');
+            const mobilePrices = document.getElementById('mobile-prices');
+            const mobileInStock = document.getElementById('mobile-instock');
+            const clearMobileBtn = document.getElementById('clear-filters-mobile');
+            const sheetOverlay = document.getElementById('sheet-overlay');
+            const sheetContent = document.getElementById('sheet-content');
+            const closeSheetBtn = document.getElementById('close-sheet-btn');
+            const mobileFilterBtn = document.getElementById('mobile-filter-btn');
+            const cartBadge = document.getElementById('cart-count-badge');
+            const modal = document.getElementById('product-modal');
+            const modalContent = document.getElementById('modal-product-content');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+            // Filter functions
+            function getFilteredProducts() {
+                let filtered = [...products];
+                if (searchQuery) {
+                    const q = searchQuery.toLowerCase();
+                    filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+                }
+                if (selectedCategory !== 'All') filtered = filtered.filter(p => p.category === selectedCategory);
+                const range = priceRanges[selectedPriceIndex];
+                filtered = filtered.filter(p => p.price >= range.min && p.price <= range.max);
+                if (inStockOnly) filtered = filtered.filter(p => p.inStock);
+                switch(sortBy) {
+                    case 'price-asc': filtered.sort((a,b) => a.price - b.price); break;
+                    case 'price-desc': filtered.sort((a,b) => b.price - a.price); break;
+                    case 'rating-desc': filtered.sort((a,b) => b.rating - a.rating); break;
+                    case 'name-asc': filtered.sort((a,b) => a.name.localeCompare(b.name)); break;
+                }
+                return filtered;
+            }
+
+            function renderStars(rating) {
+                let html = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) html += `<svg class="h-4 w-4 star-filled" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                    else html += `<svg class="h-4 w-4 star-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                }
+                return html;
+            }
+
+            function renderProductCard(product, index) {
+                const imgUrl = product.image || '';
+                return `
+                <div class="product-card bg-card rounded-xl border border-border overflow-hidden flex flex-col reveal-on-scroll" style="transition-delay: ${index * 0.06}s;">
+                    <div class="relative aspect-video bg-muted flex items-center justify-center overflow-hidden product-image-wrapper">
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${product.name}" class="h-full w-full object-cover" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-placeholder').style.display='flex';">` : ''}
+                        <span class="fallback-placeholder ${imgUrl ? 'hidden' : 'flex'} absolute inset-0 items-center justify-center text-5xl bg-muted z-0">📦</span>
+                        ${!product.inStock ? '<span class="absolute top-3 left-3 bg-destructive text-destructive-foreground text-xs font-semibold px-2.5 py-0.5 rounded-full shadow-md z-10">Out of Stock</span>' : ''}
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">${product.category}</p>
+                        <h3 class="font-semibold text-foreground text-lg leading-tight mb-1">${product.name}</h3>
+                        <p class="text-sm text-muted-foreground mb-2 line-clamp-2">${product.description}</p>
+                        <div class="flex items-center gap-1 mb-3">${renderStars(product.rating)}<span class="text-xs text-muted-foreground ml-1">${product.rating}</span></div>
+                        <div class="mt-auto flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">$${product.price.toFixed(2)}</span>
+                            <div class="flex gap-1">
+                                <button class="view-product-btn magnetic-area inline-flex items-center justify-center rounded-lg bg-secondary/20 hover:bg-secondary/40 text-secondary-foreground w-9 h-9 transition-all" data-id="${product.id}" title="View Details">
+                                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                                <button class="add-to-cart-btn magnetic-area inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all btn-press relative overflow-hidden shadow-md hover:shadow-lg" data-id="${product.id}" ${!product.inStock ? 'disabled' : ''}>
+                                    <span class="relative z-10 flex items-center gap-1.5"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>Add</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            function renderListView(product, index) {
+                const imgUrl = product.image || '';
+                return `
+                <div class="product-card bg-card rounded-xl border border-border overflow-hidden flex flex-row items-center gap-4 p-4 reveal-on-scroll" style="transition-delay: ${index * 0.06}s;">
+                    <div class="w-28 h-28 rounded-xl bg-muted overflow-hidden flex-shrink-0 product-image">
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${product.name}" class="h-full w-full object-cover" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\\'flex items-center justify-center h-full text-3xl\\'>📦</span>';">` : '<span class="flex items-center justify-center h-full text-3xl">📦</span>'}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs text-muted-foreground uppercase tracking-wider">${product.category}</p>
+                        <h3 class="font-semibold text-foreground text-lg">${product.name}</h3>
+                        <p class="text-sm text-muted-foreground line-clamp-2">${product.description}</p>
+                        <div class="flex items-center gap-2 mt-2 flex-wrap">
+                            <span class="text-xl font-bold text-foreground">$${product.price.toFixed(2)}</span>
+                            <div class="flex items-center gap-1">${renderStars(product.rating)}<span class="text-xs text-muted-foreground ml-1">${product.rating}</span></div>
+                            ${!product.inStock ? '<span class="text-xs text-destructive font-semibold ml-2">Out of Stock</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="flex gap-1 flex-shrink-0">
+                        <button class="view-product-btn magnetic-area inline-flex items-center justify-center rounded-lg bg-secondary/20 hover:bg-secondary/40 text-secondary-foreground w-9 h-9 transition-all" data-id="${product.id}" title="View Details">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="add-to-cart-btn magnetic-area inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all btn-press relative overflow-hidden shadow-md hover:shadow-lg" data-id="${product.id}" ${!product.inStock ? 'disabled' : ''}>
+                            <span class="relative z-10 flex items-center gap-1.5"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>Add</span>
+                        </button>
+                    </div>
+                </div>`;
+            }
+
+            function updateViewModeUI() {
+                if (viewMode === 'grid') {
+                    gridViewBtn.classList.add('bg-primary', 'text-primary-foreground');
+                    gridViewBtn.classList.remove('bg-white', 'text-muted-foreground');
+                    listViewBtn.classList.remove('bg-primary', 'text-primary-foreground');
+                    listViewBtn.classList.add('bg-white', 'text-muted-foreground');
+                    productsContainer.className = 'grid gap-6 sm:grid-cols-2 xl:grid-cols-3';
+                } else {
+                    listViewBtn.classList.add('bg-primary', 'text-primary-foreground');
+                    listViewBtn.classList.remove('bg-white', 'text-muted-foreground');
+                    gridViewBtn.classList.remove('bg-primary', 'text-primary-foreground');
+                    gridViewBtn.classList.add('bg-white', 'text-muted-foreground');
+                    productsContainer.className = 'flex flex-col gap-4 list-view';
+                }
+            }
+
+            function renderProducts() {
+                const filtered = getFilteredProducts();
+                resultsCount.textContent = `Showing ${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
+                if (filtered.length === 0) {
+                    productsContainer.innerHTML = '';
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+                    productsContainer.innerHTML = filtered.map((p, i) => viewMode === 'grid' ? renderProductCard(p, i) : renderListView(p, i)).join('');
+                    setTimeout(() => {
+                        document.querySelectorAll('.reveal-on-scroll:not(.visible)').forEach(el => {
+                            const rect = el.getBoundingClientRect();
+                            if (rect.top < window.innerHeight && rect.bottom > 0) el.classList.add('visible');
+                            revealObserver.observe(el);
+                        });
+                    }, 50);
+                }
+                // Attach event listeners
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        const product = products.find(p => p.id === id);
+                        if (product) addToCart(product, this);
+                    });
+                });
+                document.querySelectorAll('.view-product-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        const product = products.find(p => p.id === id);
+                        if (product) showProductModal(product);
+                    });
+                });
+                applyMagneticAll();
+            }
+
+            // --- Modal with full details and review form ---
+            function showProductModal(product) {
+                if (!modal || !modalContent) return;
+                const starsHtml = (rating) => {
+                    let html = '';
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= rating) html += `<svg class="h-5 w-5 star-filled inline-block" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                        else html += `<svg class="h-5 w-5 star-empty inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                    }
+                    return html;
+                };
+                const stockBadge = product.inStock 
+                    ? '<span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"><span class="mr-1 h-1.5 w-1.5 rounded-full bg-green-600"></span>In Stock</span>'
+                    : '<span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"><span class="mr-1 h-1.5 w-1.5 rounded-full bg-red-600"></span>Out of Stock</span>';
+                const imageUrl = product.image || '';
+                // Build specifications table
+                const specsHtml = product.specifications ? Object.entries(product.specifications).map(([k,v]) => `<div class="flex justify-between py-2 border-b border-border/50"><span class="font-medium">${k}</span><span class="text-muted-foreground">${v}</span></div>`).join('') : '<p class="text-muted-foreground">No specifications provided.</p>';
+                // Build features list
+                const featuresHtml = (product.features || []).map(f => `<li class="flex items-start gap-2"><svg class="h-4 w-4 text-secondary mt-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>${f}</li>`).join('') || '<li class="text-muted-foreground">No features listed.</li>';
+                // Build reviews
+                const reviewsHtml = (product.reviews || []).map(r => `<div class="review-item p-3 rounded-lg border border-border/50 mb-3"><div class="flex items-center gap-2 flex-wrap"><div class="flex gap-0.5">${Array.from({length:5},(_,i)=>`<svg class="h-4 w-4 ${i<r.rating?'star-filled':'star-empty'}" viewBox="0 0 24 24" fill="${i<r.rating?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`)}</div><span class="font-medium">${r.user}</span><span class="text-xs text-muted-foreground">${r.date}</span></div><p class="text-sm text-foreground mt-1">${r.comment}</p></div>`).join('') || '<p class="text-muted-foreground">No reviews yet. Be the first to review!</p>';
+                
+                modalContent.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-6 mb-6">
+                        <div class="md:w-1/2 bg-muted rounded-xl overflow-hidden flex items-center justify-center min-h-[200px]">
+                            ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" class="w-full h-auto object-cover max-h-[300px]" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-6xl\\'>📦</span>';">` : '<span class="text-6xl">📦</span>'}
+                        </div>
+                        <div class="md:w-1/2 space-y-4">
+                            <div><span class="text-xs uppercase tracking-wider text-muted-foreground">${product.category}</span></div>
+                            <h2 class="text-2xl font-bold text-foreground">${product.name}</h2>
+                            <div class="flex items-center gap-2">${starsHtml(product.rating)}<span class="text-sm text-muted-foreground">(${product.rating})</span></div>
+                            <p class="text-muted-foreground">${product.description}</p>
+                            <div class="flex items-center justify-between pt-2">
+                                <span class="text-3xl font-bold text-foreground">$${product.price.toFixed(2)}</span>
+                                ${stockBadge}
+                            </div>
+                            <button class="add-to-cart-modal-btn w-full mt-2 magnetic-area inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-primary/90 transition-all shadow-md" data-id="${product.id}">
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border-t border-border pt-6 mt-2">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-lg mb-3 flex items-center gap-2"><svg class="h-5 w-5 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16V4H4z"/><path d="M8 9h8"/><path d="M8 13h6"/><path d="M8 17h4"/></svg> Specifications</h4>
+                                <div class="bg-muted/30 rounded-lg p-3">${specsHtml}</div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-3 flex items-center gap-2"><svg class="h-5 w-5 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Key Features</h4>
+                                <ul class="list-none space-y-1">${featuresHtml}</ul>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-lg mb-3 flex items-center gap-2"><svg class="h-5 w-5 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Customer Reviews</h4>
+                            <div class="max-h-64 overflow-y-auto pr-2 space-y-2" id="modal-reviews-container">${reviewsHtml}</div>
+                            <button id="modal-add-review-btn" class="mt-4 inline-flex items-center gap-2 text-sm text-secondary hover:text-secondary/80 font-medium transition-colors">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Write a Review
+                            </button>
+                        </div>
+                    </div>
+                `;
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                
+                // Modal Add to Cart
+                const modalAddBtn = modalContent.querySelector('.add-to-cart-modal-btn');
+                if (modalAddBtn) modalAddBtn.addEventListener('click', (e) => { addToCart(product, modalAddBtn); modalAddBtn.style.transform = 'scale(0.95)'; setTimeout(() => modalAddBtn.style.transform = 'scale(1)', 180); });
+                // Modal Add Review
+                const modalReviewBtn = document.getElementById('modal-add-review-btn');
+                if (modalReviewBtn) {
+                    modalReviewBtn.addEventListener('click', () => {
+                        showReviewForm(product);
+                    });
+                }
+            }
+
+            function showReviewForm(product) {
+                // Create a form overlay inside the modal (or separate dialog)
+                const formOverlay = document.createElement('div');
+                formOverlay.className = 'fixed inset-0 z-[130] flex items-center justify-center bg-black/60 backdrop-blur-sm';
+                formOverlay.innerHTML = `
+                    <div class="bg-card rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl border border-border">
+                        <h3 class="text-lg font-semibold mb-4">Write a Review for ${product.name}</h3>
+                        <form id="review-form-modal" class="space-y-4">
+                            <div><label class="block text-sm font-medium mb-1">Your Name</label><input type="text" id="reviewer-name" required class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"></div>
+                            <div><label class="block text-sm font-medium mb-1">Rating</label><select id="reviewer-rating" class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"><option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option></select></div>
+                            <div><label class="block text-sm font-medium mb-1">Your Review</label><textarea id="reviewer-comment" rows="3" required class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"></textarea></div>
+                            <div class="flex justify-end gap-3"><button type="button" id="cancel-review-modal" class="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted">Cancel</button><button type="submit" class="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/90">Submit Review</button></div>
+                        </form>
+                    </div>
+                `;
+                document.body.appendChild(formOverlay);
+                const cancelBtn = formOverlay.querySelector('#cancel-review-modal');
+                const form = formOverlay.querySelector('#review-form-modal');
+                cancelBtn.addEventListener('click', () => formOverlay.remove());
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const user = formOverlay.querySelector('#reviewer-name').value.trim();
+                    const rating = parseInt(formOverlay.querySelector('#reviewer-rating').value);
+                    const comment = formOverlay.querySelector('#reviewer-comment').value.trim();
+                    if (user && comment) {
+                        const newReview = { user, rating, comment, date: new Date().toISOString().split('T')[0] };
+                        addCustomerReview(product.id, newReview);
+                        // Refresh modal content
+                        const updatedProduct = products.find(p => p.id === product.id);
+                        if (updatedProduct) showProductModal(updatedProduct);
+                        formOverlay.remove();
+                        showToast('⭐ Thank you for your review!', 'success');
+                    } else {
+                        showToast('Please fill all fields', 'warning');
+                    }
+                });
+            }
+
+            function closeModal() {
+                if (!modal) return;
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            // Cart functions unchanged
+            function addToCart(product, btnElement) {
+                let cart = JSON.parse(localStorage.getItem('electropower_cart') || '[]');
+                const existing = cart.find(i => i.id === product.id);
+                if (existing) existing.quantity += 1;
+                else cart.push({ ...product, quantity: 1 });
+                localStorage.setItem('electropower_cart', JSON.stringify(cart));
+                updateCartBadge();
+                showToast(`✅ ${product.name} added to cart!`);
+                if (btnElement) {
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple';
+                    ripple.style.left = '50%';
+                    ripple.style.top = '50%';
+                    ripple.style.width = '18px';
+                    ripple.style.height = '18px';
+                    ripple.style.marginLeft = '-9px';
+                    ripple.style.marginTop = '-9px';
+                    btnElement.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 700);
+                    btnElement.style.transform = 'scale(0.9)';
+                    setTimeout(() => { btnElement.style.transform = 'scale(1)'; }, 180);
+                }
+            }
+
+            function updateCartBadge() {
+                const cart = JSON.parse(localStorage.getItem('electropower_cart') || '[]');
+                const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+                if (cartBadge) {
+                    cartBadge.textContent = count;
+                    cartBadge.style.display = count > 0 ? 'flex' : 'none';
+                    if (count > 0) { cartBadge.style.animation = 'none'; cartBadge.offsetHeight; cartBadge.style.animation = 'fadeInScale 0.3s ease-out'; }
+                }
+            }
+
+            function showToast(msg, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                const bgColors = { success: 'bg-green-600', info: 'bg-foreground', warning: 'bg-yellow-600' };
+                toast.className = `toast-item pointer-events-auto ${bgColors[type] || bgColors.info} text-white px-4 py-3 rounded-xl shadow-2xl text-sm font-medium max-w-xs border border-secondary/30`;
+                toast.style.animation = 'fadeInUp 0.4s ease-out forwards';
+                toast.textContent = msg;
+                container.appendChild(toast);
+                setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 2500);
+            }
+
+            // Filters UI
+            function updateFilterUI() {
+                desktopCategories.innerHTML = categories.map(cat => `<button class="filter-cat-btn w-full rounded-lg px-3 py-2 text-left text-sm transition-all duration-200 ${selectedCategory === cat ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:bg-muted hover:text-foreground hover:shadow-sm'}" data-cat="${cat}">${cat}</button>`).join('');
+                desktopPrices.innerHTML = priceRanges.map((range, idx) => `<button class="filter-price-btn w-full rounded-lg px-3 py-2 text-left text-sm transition-all duration-200 ${selectedPriceIndex === idx ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:bg-muted hover:text-foreground hover:shadow-sm'}" data-index="${idx}">${range.label}</button>`).join('');
+                desktopInStock.checked = inStockOnly;
+                mobileCategories.innerHTML = categories.map(cat => `<button class="filter-cat-btn w-full rounded-lg px-3 py-2 text-left text-sm transition-all duration-200 ${selectedCategory === cat ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:bg-muted hover:text-foreground hover:shadow-sm'}" data-cat="${cat}">${cat}</button>`).join('');
+                mobilePrices.innerHTML = priceRanges.map((range, idx) => `<button class="filter-price-btn w-full rounded-lg px-3 py-2 text-left text-sm transition-all duration-200 ${selectedPriceIndex === idx ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:bg-muted hover:text-foreground hover:shadow-sm'}" data-index="${idx}">${range.label}</button>`).join('');
+                mobileInStock.checked = inStockOnly;
+                const hasActive = searchQuery || selectedCategory !== 'All' || selectedPriceIndex !== 0 || inStockOnly;
+                clearDesktopBtn.classList.toggle('hidden', !hasActive);
+                clearMobileBtn.classList.toggle('hidden', !hasActive);
+            }
+
+            function clearAllFilters() {
+                searchQuery = ''; selectedCategory = 'All'; selectedPriceIndex = 0; inStockOnly = false;
+                searchInput.value = '';
+                updateFilterUI(); renderProducts(); closeSheet();
+            }
+            function closeSheet() { sheetContent.classList.remove('open'); sheetOverlay.classList.add('hidden'); document.body.style.overflow = ''; }
+            function openSheet() { sheetContent.classList.add('open'); sheetOverlay.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+
+            // Event listeners
+            searchInput.addEventListener('input', function() { searchQuery = this.value; updateFilterUI(); renderProducts(); });
+            sortSelect.addEventListener('change', function() { sortBy = this.value; renderProducts(); });
+            gridViewBtn.addEventListener('click', function() { viewMode = 'grid'; updateViewModeUI(); renderProducts(); });
+            listViewBtn.addEventListener('click', function() { viewMode = 'list'; updateViewModeUI(); renderProducts(); });
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('filter-cat-btn')) { selectedCategory = e.target.dataset.cat; updateFilterUI(); renderProducts(); if (window.innerWidth < 1024) closeSheet(); }
+                if (e.target.classList.contains('filter-price-btn')) { selectedPriceIndex = parseInt(e.target.dataset.index); updateFilterUI(); renderProducts(); if (window.innerWidth < 1024) closeSheet(); }
+            });
+            desktopInStock.addEventListener('change', function() { inStockOnly = this.checked; mobileInStock.checked = this.checked; updateFilterUI(); renderProducts(); });
+            mobileInStock.addEventListener('change', function() { inStockOnly = this.checked; desktopInStock.checked = this.checked; updateFilterUI(); renderProducts(); });
+            clearDesktopBtn.addEventListener('click', clearAllFilters);
+            clearMobileBtn.addEventListener('click', clearAllFilters);
+            clearFiltersEmpty.addEventListener('click', clearAllFilters);
+            mobileFilterBtn.addEventListener('click', openSheet);
+            closeSheetBtn.addEventListener('click', closeSheet);
+            sheetOverlay.addEventListener('click', function(e) { if (e.target === sheetOverlay) closeSheet(); });
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+            // Global UI enhancements (scroll, back to top, header shadow, mobile menu, reveal observer, magnetic, canvas)
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                if (progressBar) progressBar.style.width = progress + '%';
+            });
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => { if (window.scrollY > 500) backToTopBtn.classList.add('visible'); else backToTopBtn.classList.remove('visible'); });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => { header.style.boxShadow = window.scrollY > 8 ? '0 4px 28px rgba(0,0,0,0.08)' : '0 1px 3px rgba(0,0,0,0.03)'; });
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isOpen = mobileMenu.classList.contains('open');
+                    if (isOpen) {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    } else {
+                        mobileMenu.classList.remove('hidden');
+                        requestAnimationFrame(() => mobileMenu.classList.add('open'));
+                        menuIconOpen.classList.add('hidden');
+                        menuIconClose.classList.remove('hidden');
+                    }
+                });
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('open');
+                        setTimeout(() => mobileMenu.classList.add('hidden'), 350);
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    });
+                });
+            }
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) { el.classList.add('visible'); revealObserver.unobserve(el); }
+                });
+            }, 200);
+            function applyMagneticAll() {
+                document.querySelectorAll('.magnetic-area').forEach(el => {
+                    if (el.dataset.magneticBound) return;
+                    el.dataset.magneticBound = 'true';
+                    el.addEventListener('mousemove', function(e) {
+                        const rect = el.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        el.style.transform = `translate(${x * 0.18}px, ${y * 0.18}px)`;
+                    });
+                    el.addEventListener('mouseleave', function() { el.style.transform = 'translate(0px, 0px)'; });
+                });
+            }
+            applyMagneticAll();
+            const canvas = document.getElementById('hero-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let particles = [], animId;
+                const heroSection = document.getElementById('hero-section');
+                function resizeCanvas() { canvas.width = heroSection.offsetWidth; canvas.height = heroSection.offsetHeight; }
+                class Particle { constructor() { this.reset(); } reset() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.vx = (Math.random() - 0.5) * 0.8; this.vy = (Math.random() - 0.5) * 0.8; this.size = Math.random() * 2 + 0.6; this.alpha = Math.random() * 0.5 + 0.2; this.decay = Math.random() * 0.006 + 0.002; } update() { this.x += this.vx; this.y += this.vy; this.alpha -= this.decay; if (this.alpha <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) { this.reset(); this.alpha = Math.random() * 0.5 + 0.2; } } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = `rgba(226,168,58,${this.alpha})`; ctx.fill(); } }
+                function initParticles() { const count = Math.min(Math.floor((canvas.width * canvas.height) / 10000), 80); particles = []; for (let i = 0; i < count; i++) particles.push(new Particle()); }
+                function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); animId = requestAnimationFrame(animate); }
+                resizeCanvas(); initParticles(); animate();
+                window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+                const heroObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting && !animId) animate(); else if (!entry.isIntersecting && animId) { cancelAnimationFrame(animId); animId = null; } }); }, { threshold: 0.05 });
+                heroObserver.observe(heroSection);
+            }
+            // Final init
+            updateFilterUI();
+            updateViewModeUI();
+            renderProducts();
+            updateCartBadge();
+            console.log('⚡ Products page with detailed product view & customer reviews');
+        })();
+    </script>
+</body>
+</html>
